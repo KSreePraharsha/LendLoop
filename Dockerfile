@@ -1,5 +1,6 @@
 # ===================================================================
 # Multi-stage Dockerfile for LendLoop (Spring Boot + Java 21)
+# Optimized for Render Web Service Deployment & Local Docker
 # ===================================================================
 
 # -------------------------------------------------------------------
@@ -13,13 +14,13 @@ WORKDIR /app
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 
-# Ensure Linux line endings and executable permissions for Maven wrapper
+# Normalize line endings (CRLF to LF) and grant execution permissions
 RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
 
 # Copy application source code
 COPY src/ ./src/
 
-# Build and package the Spring Boot executable JAR (skip unit tests during image build)
+# Package the Spring Boot executable JAR (skipping tests for build speed)
 RUN ./mvnw clean package -DskipTests
 
 # -------------------------------------------------------------------
@@ -42,5 +43,5 @@ USER lendloop
 ENV PORT=8081
 EXPOSE 8081
 
-# Launch Spring Boot with dynamic PORT resolution
-ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8081} -jar app.jar"]
+# Launch Spring Boot with dynamic PORT binding and container-aware memory tuning
+ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Dserver.port=${PORT:-8081} -jar app.jar"]
