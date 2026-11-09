@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Borrow Requests - LendLoop</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .requests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .req-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+        }
+
+        .req-card:hover {
+            border-color: #93c5fd;
+            box-shadow: var(--shadow-md);
+        }
+
+        .req-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 8px;
+        }
+
+        .req-meta-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 13.5px;
+            color: var(--slate-600);
+        }
+
+        .req-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 640px) {
+            .req-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item active">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="page-header page-header-actions">
+            <div>
+                <h1 class="page-header-title">My Borrow Requests</h1>
+                <p class="page-header-desc">Track real-time status of resource requests you have sent to other student owners.</p>
+            </div>
+            <a th:href="@{/items}" class="btn btn-secondary">Browse More Items</a>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" th:if="${#lists.isEmpty(requests)}">
+            <div class="empty-state-icon">📋</div>
+            <h3 class="empty-state-title">No borrow requests submitted yet</h3>
+            <p class="empty-state-text">
+                Browse available campus textbooks, calculators, and lab tools to send your first borrowing request!
+            </p>
+            <a th:href="@{/items}" class="btn btn-primary">Browse Available Items</a>
+        </div>
+
+        <!-- Requests List -->
+        <div class="requests-list" th:unless="${#lists.isEmpty(requests)}">
+
+            <div class="req-card" th:each="request : ${requests}">
+                <div class="req-info">
+                    <h3 th:text="${request.item.title}">Item Title</h3>
+                    <div class="req-meta-row">
+                        <div class="req-meta-item">
+                            <span>👤 Owner:</span>
+                            <strong th:text="${request.item.owner.fullName}">Owner Name</strong>
+                        </div>
+                        <div class="req-meta-item">
+                            <span>📅 Period:</span>
+                            <span>
+                                <strong th:text="${request.startDate}">Start Date</strong>
+                                &rarr;
+                                <strong th:text="${request.endDate}">End Date</strong>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="badge"
+                          th:classappend="${request.status}"
+                          th:text="${request.status}">
+                        PENDING
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <a th:href="@{/dashboard}" href="/dashboard" class="back-link">
+            &larr; Back to Dashboard
+        </a>
+
+    </main>
+
+</body>
+</html>

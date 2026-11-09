@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make an Offer - LendLoop</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .offer-container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
+            color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .summary-badge-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .summary-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 13.5px;
+        }
+
+        .summary-lbl {
+            color: var(--slate-300);
+            font-size: 12px;
+            display: block;
+        }
+
+        .summary-val {
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .form-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item active">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="offer-container">
+
+            <div class="page-header" style="margin-bottom: 24px;">
+                <h1 class="page-header-title">Make a Lending Offer</h1>
+                <p class="page-header-desc">Offer to lend one of your listed items to fulfill this student's request.</p>
+            </div>
+
+            <!-- Error Banner -->
+            <div th:if="${errorMessage}" class="alert alert-error">
+                <span style="font-size: 18px;">⚠️</span>
+                <span th:text="${errorMessage}">Error message</span>
+            </div>
+
+            <!-- Target Request Summary -->
+            <div class="summary-card">
+                <div class="summary-badge-row">
+                    <span class="badge badge-tag" style="background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.2);" th:text="${wantedItem.category}">Category</span>
+                    <span class="badge OPEN" th:text="${wantedItem.status}">OPEN</span>
+                </div>
+
+                <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;" th:text="${wantedItem.title}">Item Name</h2>
+                <p style="color: var(--slate-300); font-size: 14px; line-height: 1.5;" th:text="${wantedItem.description}">Description...</p>
+
+                <div class="summary-meta-grid">
+                    <div>
+                        <span class="summary-lbl">Requester</span>
+                        <span class="summary-val" th:text="${wantedItem.requester.fullName}">Student Name</span>
+                    </div>
+                    <div>
+                        <span class="summary-lbl">Department</span>
+                        <span class="summary-val" th:text="${wantedItem.requester.department}">Department</span>
+                    </div>
+                    <div>
+                        <span class="summary-lbl">Requested Dates</span>
+                        <span class="summary-val">
+                            <span th:text="${wantedItem.startDate}">Start</span> &rarr; <span th:text="${wantedItem.endDate}">End</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Offer Form -->
+            <div class="form-card">
+
+                <!-- No Listings Warning -->
+                <div th:if="${#lists.isEmpty(myListings)}" style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 40px; margin-bottom: 12px;">📦</div>
+                    <h3 style="font-size: 18px; font-weight: 700; color: var(--navy-900); margin-bottom: 8px;">No Listings Found</h3>
+                    <p style="color: var(--slate-600); font-size: 14px; margin-bottom: 18px; max-width: 440px; margin-left: auto; margin-right: auto;">
+                        To make an offer, you must select an item from your own listings. You currently don't have any listed items.
+                    </p>
+                    <a th:href="@{/items/add}" class="btn btn-primary">+ Add an Item to My Listings</a>
+                </div>
+
+                <!-- Form if listings exist -->
+                <form th:unless="${#lists.isEmpty(myListings)}" th:action="@{/wanted-items/{id}/offer(id=${wantedItem.id})}" method="post">
+
+                    <div class="form-group">
+                        <label class="form-label" for="itemId">Select Item From Your Listings *</label>
+                        <select id="itemId" name="itemId" class="form-select" required>
+                            <option value="">-- Choose an item to lend --</option>
+                            <option th:each="myItem : ${myListings}"
+                                    th:value="${myItem.id}"
+                                    th:text="${myItem.title + ' (' + myItem.category + ') - ' + (myItem.available ? 'Available' : 'Unavailable')}"
+                                    th:disabled="${!myItem.available}">
+                                Item Title (Category)
+                            </option>
+                        </select>
+                        <small style="display: block; color: var(--slate-500); font-size: 12.5px; margin-top: 6px;">
+                            Only items marked as currently available can be offered.
+                        </small>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="startDate">Available From *</label>
+                            <input type="date" id="startDate" name="startDate" class="form-control"
+                                   th:value="${wantedItem.startDate}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="endDate">Available Until *</label>
+                            <input type="date" id="endDate" name="endDate" class="form-control"
+                                   th:value="${wantedItem.endDate}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="message">Offer Message or Condition Notes</label>
+                        <textarea id="message" name="message" class="form-textarea" rows="3"
+                                  placeholder="e.g., I have the 5th edition with all problem sets included, good condition. Can meet at the campus library."></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 14px; margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary" style="flex: 2;">
+                            🤝 Submit Offer
+                        </button>
+                        <a th:href="@{/wanted-items}" class="btn btn-secondary" style="flex: 1; text-align: center;">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div style="text-align: center; margin-top: 24px;">
+                <a th:href="@{/wanted-items}" class="back-link">
+                    &larr; Back to Wanted Board
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

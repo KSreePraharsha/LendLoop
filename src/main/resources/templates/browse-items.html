@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Items - LendLoop</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .search-container {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 22px 26px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-form-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-400);
+            font-size: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            font-size: 15px;
+            border: 1.5px solid var(--slate-300);
+            border-radius: var(--radius-md);
+            color: var(--slate-900);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--blue-600);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .search-actions {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13.5px;
+        }
+
+        .reset-link {
+            color: var(--blue-600);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .reset-link:hover {
+            text-decoration: underline;
+        }
+
+        .items-marketplace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .marketplace-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .marketplace-card:hover {
+            transform: translateY(-3px);
+            border-color: #93c5fd;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .item-category-tag {
+            background: var(--blue-50);
+            color: var(--blue-700);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid var(--blue-100);
+        }
+
+        .item-card-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .item-card-desc {
+            color: var(--slate-600);
+            font-size: 14px;
+            line-height: 1.55;
+            margin-bottom: 18px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 64px;
+        }
+
+        .item-meta-list {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .meta-label {
+            color: var(--slate-500);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 12px;
+        }
+
+        .meta-val {
+            color: var(--slate-800);
+            font-weight: 600;
+        }
+
+        .borrow-box {
+            background: var(--blue-50);
+            border: 1px solid var(--blue-100);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 6px;
+        }
+
+        .borrow-box h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--blue-700);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dates-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .dates-grid label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--slate-700);
+            margin-bottom: 4px;
+        }
+
+        .dates-grid input[type="date"] {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 13px;
+            border: 1px solid var(--slate-300);
+            border-radius: var(--radius-sm);
+            background: var(--white);
+        }
+
+        .own-listing-badge {
+            background: var(--slate-100);
+            border: 1px solid var(--slate-300);
+            color: var(--slate-700);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .unavailable-badge-box {
+            background: var(--red-100);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            color: var(--red-800);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .search-form-row {
+                flex-direction: column;
+            }
+            .search-actions {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+            .dates-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item active">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <!-- Page Header -->
+        <div class="page-header page-header-actions">
+            <div>
+                <h1 class="page-header-title">Campus Resource Catalog</h1>
+                <p class="page-header-desc">Find textbooks, lab apparatus, and tech gear available for peer-to-peer loan.</p>
+            </div>
+            <a th:href="@{/items/add}" href="/items/add" class="btn btn-primary">+ List an Item</a>
+        </div>
+
+        <!-- Search Bar Section -->
+        <section class="search-container">
+            <form th:action="@{/items/search}" method="get">
+                <div class="search-form-row">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text"
+                               name="keyword"
+                               class="search-input"
+                               placeholder="Search resources by title or keyword..."
+                               th:value="${keyword}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search Catalog</button>
+                </div>
+                <div class="search-actions">
+                    <span th:if="${keyword != null and keyword != ''}" style="color: var(--slate-600);">
+                        Showing results for: <strong th:text="${keyword}">keyword</strong>
+                    </span>
+                    <span th:unless="${keyword != null and keyword != ''}" style="color: var(--slate-500);">
+                        Browse all available items across college departments
+                    </span>
+                    <a th:href="@{/items}" class="reset-link">Clear & Show All Items</a>
+                </div>
+            </form>
+        </section>
+
+        <!-- Error Messages -->
+        <div th:if="${param.error}" class="alert alert-error">
+            <span style="font-size: 18px;">⚠️</span>
+            <div>
+                <p th:if="${param.error[0] == 'ownitem'}">
+                    <strong>Action Forbidden:</strong> You cannot request to borrow an item that you listed yourself.
+                </p>
+                <p th:if="${param.error[0] == 'unavailable'}">
+                    <strong>Item Unavailable:</strong> This resource is currently reserved or already checked out.
+                </p>
+                <p th:if="${param.error[0] == 'invaliddates'}">
+                    <strong>Invalid Dates:</strong> Please select a valid future date range for your borrow request.
+                </p>
+                <p th:if="${param.error[0] == 'duration'}">
+                    <strong>Duration Exceeded:</strong> Your selected borrowing period exceeds the owner's maximum allowed loan days.
+                </p>
+            </div>
+        </div>
+
+        <!-- Empty Items State -->
+        <div th:if="${#lists.isEmpty(items)}" class="empty-state">
+            <div class="empty-state-icon">📦</div>
+            <h3 class="empty-state-title">No resources found</h3>
+            <p class="empty-state-text">
+                There are currently no items matching your criteria. Try another search or be the first to share an item with your campus!
+            </p>
+            <a th:href="@{/items/add}" class="btn btn-primary">+ Add New Item</a>
+        </div>
+
+        <!-- Marketplace Items Grid -->
+        <div class="items-marketplace-grid" th:unless="${#lists.isEmpty(items)}">
+
+            <div class="marketplace-card" th:each="item : ${items}">
+                <div>
+                    <!-- Top Category & Status -->
+                    <div class="card-top">
+                        <span class="item-category-tag" th:text="${item.category}">Category</span>
+                        <div>
+                            <span class="badge badge-available" th:if="${item.available}">Available</span>
+                            <span class="badge badge-unavailable" th:unless="${item.available}">Unavailable</span>
+                        </div>
+                    </div>
+
+                    <!-- Title & Description -->
+                    <h3 class="item-card-title" th:text="${item.title}">Item Title</h3>
+                    <p class="item-card-desc" th:text="${item.description}">Item Description</p>
+
+                    <!-- Item Metadata -->
+                    <div class="item-meta-list">
+                        <div>
+                            <span class="meta-label">Condition</span>
+                            <span class="meta-val" th:text="${item.itemCondition}">Good</span>
+                        </div>
+                        <div>
+                            <span class="meta-label">Max Duration</span>
+                            <span class="meta-val"><span th:text="${item.maxBorrowDays}">7</span> Days</span>
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <span class="meta-label">Listed By</span>
+                            <span class="meta-val" th:text="${item.owner.fullName}">Student Owner</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Borrow Form Section -->
+                <div>
+                    <!-- Available to other students -->
+                    <div class="borrow-box"
+                         th:if="${item.available and item.owner.id != session.studentId}">
+                        <h4><span>📅</span> Request to Borrow</h4>
+
+                        <form th:action="@{/borrow/{itemId}(itemId=${item.id})}" method="post">
+                            <div class="dates-grid">
+                                <div>
+                                    <label>Start Date</label>
+                                    <input type="date"
+                                           name="startDate"
+                                           required
+                                           th:attr="min=${today}">
+                                </div>
+                                <div>
+                                    <label>End Date</label>
+                                    <input type="date"
+                                           name="endDate"
+                                           required
+                                           th:attr="min=${today}">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Submit Borrow Request
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Owner's Own Item Notice -->
+                    <div class="own-listing-badge" th:if="${item.owner.id == session.studentId}">
+                        👤 This is your listed item
+                    </div>
+
+                    <!-- Unavailable Notice -->
+                    <div class="unavailable-badge-box" th:if="${!item.available}">
+                        🔒 Currently Borrowed / Unavailable
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

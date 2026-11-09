@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LendLoop</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        .login-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* ---------------- Left Branding Panel ---------------- */
+
+        .brand-panel {
+            flex: 1 1 50%;
+            background: linear-gradient(145deg, #0f172a 0%, #172554 40%, #1e3a8a 75%, #0d9488 100%);
+            color: white;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative Background Orbs */
+        .brand-panel::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.35) 0%, rgba(13, 148, 136, 0) 70%);
+            pointer-events: none;
+        }
+
+        .brand-panel::after {
+            content: "";
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, rgba(37, 99, 235, 0) 70%);
+            pointer-events: none;
+        }
+
+        .brand-header {
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-logo-badge {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #38bdf8, #0d9488);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(13, 148, 136, 0.4);
+        }
+
+        .brand-logo-badge svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+            margin: 40px 0;
+            max-width: 520px;
+        }
+
+        .brand-tagline-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            color: #5eead4;
+            padding: 7px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 22px;
+            border: 1px solid rgba(94, 234, 212, 0.3);
+            letter-spacing: 0.3px;
+        }
+
+        .brand-heading {
+            font-size: 40px;
+            line-height: 1.2;
+            font-weight: 800;
+            margin-bottom: 18px;
+            letter-spacing: -0.8px;
+        }
+
+        .brand-heading span {
+            background: linear-gradient(135deg, #67e8f9 0%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-description {
+            font-size: 16px;
+            line-height: 1.65;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        /* Decorative Illustration */
+        .illustration-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .illustration-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .illustration-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .illustration-text h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 3px;
+        }
+
+        .illustration-text p {
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        .brand-footer {
+            position: relative;
+            z-index: 2;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* ---------------- Right Form Panel ---------------- */
+
+        .form-panel {
+            flex: 1 1 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 30px;
+            background: #f8fafc;
+        }
+
+        .login-card {
+            background: white;
+            width: 100%;
+            max-width: 440px;
+            padding: 42px 38px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-header {
+            margin-bottom: 28px;
+        }
+
+        .form-header h2 {
+            font-size: 27px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-header p {
+            color: #64748b;
+            font-size: 14.5px;
+            line-height: 1.5;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.45;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+        }
+
+        .alert-icon {
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 13px 16px;
+            font-size: 15px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #0f172a;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .input-control:hover {
+            border-color: #94a3b8;
+        }
+
+        .input-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15);
+            background: #ffffff;
+        }
+
+        .input-control::placeholder {
+            color: #94a3b8;
+            font-size: 14.5px;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            color: white;
+            font-size: 15.5px;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Form Footer */
+        .form-footer {
+            margin-top: 26px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+        }
+
+        .form-footer p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .form-footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .form-footer a:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-block;
+            font-size: 13.5px;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            margin-top: 4px;
+        }
+
+        .back-link:hover {
+            color: #0f172a !important;
+        }
+
+        /* ---------------- Responsive Styles ---------------- */
+
+        @media (max-width: 960px) {
+            .login-wrapper {
+                flex-direction: column;
+            }
+
+            .brand-panel {
+                flex: none;
+                padding: 40px 30px;
+            }
+
+            .brand-content {
+                margin: 20px 0;
+            }
+
+            .brand-heading {
+                font-size: 30px;
+            }
+
+            .illustration-card {
+                display: none;
+            }
+
+            .form-panel {
+                flex: none;
+                padding: 35px 20px 50px;
+            }
+
+            .login-card {
+                padding: 32px 24px;
+                box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-panel {
+                padding: 30px 20px;
+            }
+
+            .brand-heading {
+                font-size: 26px;
+            }
+
+            .brand-description {
+                font-size: 14.5px;
+            }
+
+            .login-card {
+                padding: 26px 18px;
+            }
+
+            .form-header h2 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-wrapper">
+
+        <!-- Left Branding & Illustration Section -->
+        <aside class="brand-panel">
+
+            <div class="brand-header">
+                <a th:href="@{/}" href="/" class="brand-logo">
+                    <div class="brand-logo-badge">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <span>LendLoop</span>
+                </a>
+            </div>
+
+            <div class="brand-content">
+                <div class="brand-tagline-badge">
+                    Campus Resource Sharing
+                </div>
+
+                <h1 class="brand-heading">
+                    Borrow more.<br>
+                    <span>Share more.</span><br>
+                    Waste less.
+                </h1>
+
+                <p class="brand-description">
+                    Connect with fellow students to borrow textbooks, electronics, and lab equipment. Save money and build a collaborative campus community.
+                </p>
+
+                <div class="illustration-card">
+                    <div class="illustration-item">
+                        <div class="illustration-icon">📚</div>
+                        <div class="illustration-text">
+                            <h4>Academic Resources</h4>
+                            <p>Borrow and lend semester textbooks, calculators, and study notes.</p>
+                        </div>
+                    </div>
+
+                    <div class="illustration-item">
+                        <div class="illustration-icon">💻</div>
+                        <div class="illustration-text">
+                            <h4>Electronics & Lab Gear</h4>
+                            <p>Access components, sensors, and lab equipment on demand.</p>
+                        </div>
+                    </div>
+
+                    <div class="illustration-item">
+                        <div class="illustration-icon">🤝</div>
+                        <div class="illustration-text">
+                            <h4>Verified Peers</h4>
+                            <p>Campus-exclusive access using your official student credentials.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brand-footer">
+                &copy; 2026 LendLoop &bull; Campus Peer-to-Peer Resource Sharing
+            </div>
+
+        </aside>
+
+        <!-- Right Form Section -->
+        <main class="form-panel">
+
+            <div class="login-card">
+
+                <div class="form-header">
+                    <h2>Welcome Back</h2>
+                    <p>Enter your student credentials to access your dashboard.</p>
+                </div>
+
+                <!-- Error Alert Message -->
+                <div class="alert alert-error"
+                     th:if="${error}">
+                    <span class="alert-icon">⚠️</span>
+                    <span th:text="${error}">Invalid email or password!</span>
+                </div>
+
+                <!-- Registration Success Message -->
+                <div class="alert alert-success"
+                     th:if="${param.registered}">
+                    <span class="alert-icon">✓</span>
+                    <span>Registration successful! Please log in with your credentials.</span>
+                </div>
+
+                <!-- Login Form -->
+                <form action="/login" th:action="@{/login}" method="post">
+
+                    <div class="form-group">
+                        <label for="username" class="form-label">College Email</label>
+                        <input type="email"
+                               id="username"
+                               name="username"
+                               class="input-control"
+                               placeholder="e.g. rollnumber@college.edu"
+                               autocomplete="email"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               class="input-control"
+                               placeholder="Enter your password"
+                               autocomplete="current-password"
+                               required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        Sign In
+                    </button>
+
+                </form>
+
+                <div class="form-footer">
+                    <p>
+                        Don't have an account?
+                        <a th:href="@{/register}" href="/register">Register here</a>
+                    </p>
+                    <a th:href="@{/}" href="/" class="back-link">&larr; Back to Home</a>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - LendLoop</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            width: 400px;
+            max-width: 92%;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2563eb;
+        }
+
+        p {
+            text-align: center;
+            color: #666;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 9px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
+        a {
+            color: #2563eb;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>LendLoop</h1>
+    <p>Create your student account</p>
+
+    <form th:action="@{/register}" th:object="${student}" method="post">
+
+        <input type="text"
+               th:field="*{fullName}"
+               placeholder="Full Name"
+               required>
+        <span class="error"
+              th:errors="*{fullName}"></span>
+
+        <input type="email"
+               th:field="*{email}"
+               placeholder="College Email"
+               required>
+        <span class="error"
+              th:errors="*{email}"></span>
+
+        <input type="text"
+               th:field="*{rollNumber}"
+               placeholder="Roll Number"
+               required>
+        <span class="error"
+              th:errors="*{rollNumber}"></span>
+
+        <input type="text"
+               th:field="*{department}"
+               placeholder="Department"
+               required>
+        <span class="error"
+              th:errors="*{department}"></span>
+
+        <input type="password"
+               th:field="*{password}"
+               placeholder="Password (minimum 8 characters)"
+               minlength="8"
+               required>
+        <span class="error"
+              th:errors="*{password}"></span>
+
+        <p class="error" th:text="${error}"></p>
+
+        <button type="submit">Create Account</button>
+
+    </form>
+
+    <p>Already have an account? <a href="/login">Login</a></p>
+
+    <p><a href="/">Back to Home</a></p>
+
+</div>
+
+</body>
+</html>

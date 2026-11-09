@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanted Items Board - LendLoop</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .wanted-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .wanted-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .wanted-card:hover {
+            border-color: #93c5fd;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .wanted-desc {
+            color: var(--slate-600);
+            font-size: 14px;
+            margin: 12px 0 16px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .wanted-meta-table {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .wanted-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meta-lbl {
+            color: var(--slate-500);
+            font-size: 12px;
+        }
+
+        .meta-val {
+            color: var(--slate-800);
+            font-weight: 600;
+        }
+
+        .btn-offer {
+            width: 100%;
+            background: linear-gradient(135deg, var(--teal-600) 0%, var(--teal-500) 100%);
+            color: var(--white);
+            border: none;
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition: var(--transition);
+            box-shadow: 0 3px 10px rgba(13, 148, 136, 0.25);
+        }
+
+        .btn-offer:hover {
+            background: linear-gradient(135deg, #0f766e 0%, var(--teal-600) 100%);
+            color: var(--white);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(13, 148, 136, 0.35);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item active">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="page-header page-header-actions">
+            <div>
+                <h1 class="page-header-title">Wanted Items & Student Requests</h1>
+                <p class="page-header-desc">See what campus gear or textbooks fellow students are searching for, and make an offer to lend yours.</p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a th:href="@{/my-wanted-items}" class="btn btn-secondary">My Wanted Requests</a>
+                <a th:href="@{/my-offers}" class="btn btn-secondary">My Offers</a>
+                <a th:href="@{/wanted-items/post}" class="btn btn-primary">+ Post a Wanted Item</a>
+            </div>
+        </div>
+
+        <!-- Feedback Alert if redirect with error -->
+        <div th:if="${errorMessage}" class="alert alert-error">
+            <span style="font-size: 18px;">⚠️</span>
+            <span th:text="${errorMessage}">Error message</span>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" th:if="${#lists.isEmpty(wantedItems)}">
+            <div class="empty-state-icon">📢</div>
+            <h3 class="empty-state-title">No open requests right now</h3>
+            <p class="empty-state-text">
+                There are currently no open wanted item requests from other students. Need something for class or lab? Be the first to post!
+            </p>
+            <a th:href="@{/wanted-items/post}" class="btn btn-primary">Post a Request</a>
+        </div>
+
+        <!-- Wanted Items Grid -->
+        <div class="wanted-grid" th:unless="${#lists.isEmpty(wantedItems)}">
+
+            <div class="wanted-card" th:each="item : ${wantedItems}">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px;">
+                        <span class="badge badge-tag" th:text="${item.category}">Category</span>
+                        <span class="badge" th:classappend="${item.status}" th:text="${item.status}">OPEN</span>
+                    </div>
+
+                    <h3 style="font-size: 18px; font-weight: 700; color: var(--navy-900); margin-bottom: 6px;" th:text="${item.title}">Item Name</h3>
+                    <p class="wanted-desc" th:text="${item.description}">Detailed item description...</p>
+                </div>
+
+                <div>
+                    <div class="wanted-meta-table">
+                        <div class="wanted-meta-row">
+                            <span class="meta-lbl">Requested By</span>
+                            <span class="meta-val" th:text="${item.requester.fullName}">Student Name</span>
+                        </div>
+                        <div class="wanted-meta-row">
+                            <span class="meta-lbl">Department</span>
+                            <span class="meta-val" th:text="${item.requester.department}">Department</span>
+                        </div>
+                        <div class="wanted-meta-row">
+                            <span class="meta-lbl">Needed Period</span>
+                            <span class="meta-val">
+                                <span th:text="${item.startDate}">Start Date</span> &rarr; <span th:text="${item.endDate}">End Date</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div th:if="${item.requester.id != currentStudentId}">
+                        <a th:href="@{/wanted-items/{id}/offer(id=${item.id})}" class="btn-offer">
+                            🤝 I Can Lend This
+                        </a>
+                    </div>
+
+                    <div th:if="${item.requester.id == currentStudentId}" style="text-align: center; color: var(--slate-500); font-size: 13px; font-weight: 600; padding: 10px; background: var(--slate-100); border-radius: var(--radius-md);">
+                        📌 Posted by you
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <a th:href="@{/dashboard}" href="/dashboard" class="back-link">
+            &larr; Back to Dashboard
+        </a>
+
+    </main>
+
+</body>
+</html>

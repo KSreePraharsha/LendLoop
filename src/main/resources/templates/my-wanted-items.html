@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wanted Requests - LendLoop</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .request-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 26px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+            transition: var(--transition);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .offers-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid var(--slate-200);
+        }
+
+        .offers-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .offer-item-card {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            transition: var(--transition);
+        }
+
+        .offer-item-card:hover {
+            border-color: #93c5fd;
+            background: #f8fafc;
+        }
+
+        .offer-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        @media (max-width: 640px) {
+            .offer-item-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .offer-actions {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .offer-actions form {
+                flex: 1;
+            }
+            .offer-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item active">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="page-header page-header-actions">
+            <div>
+                <h1 class="page-header-title">My Wanted Requests & Received Offers</h1>
+                <p class="page-header-desc">Manage the items you've requested and review lending offers from classmates.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a th:href="@{/wanted-items}" class="btn btn-secondary">Browse Wanted Board</a>
+                <a th:href="@{/wanted-items/post}" class="btn btn-primary">+ Post New Request</a>
+            </div>
+        </div>
+
+        <!-- Feedback Banners -->
+        <div th:if="${param.posted}" class="alert alert-success">
+            <span style="font-size: 18px;">✓</span>
+            <span>Your wanted item request has been published to the board!</span>
+        </div>
+
+        <div th:if="${param.accepted}" class="alert alert-success">
+            <span style="font-size: 18px;">✓</span>
+            <span>Offer accepted successfully! A borrowing record has been created. You can track it under My Borrowings.</span>
+        </div>
+
+        <div th:if="${param.rejected}" class="alert alert-success">
+            <span style="font-size: 18px;">✓</span>
+            <span>Offer rejected. Your request remains open for other offers.</span>
+        </div>
+
+        <div th:if="${param.cancelled}" class="alert alert-success">
+            <span style="font-size: 18px;">✓</span>
+            <span>Wanted request cancelled successfully.</span>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-error">
+            <span style="font-size: 18px;">⚠️</span>
+            <span th:text="${errorMessage != null ? errorMessage : 'Action could not be completed. The item may already be booked or unavailable.'}">
+                Action could not be completed.
+            </span>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" th:if="${#lists.isEmpty(myRequests)}">
+            <div class="empty-state-icon">📋</div>
+            <h3 class="empty-state-title">No wanted item requests posted</h3>
+            <p class="empty-state-text">
+                Need a textbook, lab apron, or calculator? Post a wanted request so classmates who own it can make you an offer.
+            </p>
+            <a th:href="@{/wanted-items/post}" class="btn btn-primary">Post Your First Request</a>
+        </div>
+
+        <!-- Requests List -->
+        <div th:unless="${#lists.isEmpty(myRequests)}">
+
+            <div class="request-card" th:each="request : ${myRequests}">
+                <div class="request-header">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <span class="badge badge-tag" th:text="${request.category}">Category</span>
+                            <span class="badge" th:classappend="${request.status}" th:text="${request.status}">OPEN</span>
+                        </div>
+                        <h2 style="font-size: 20px; font-weight: 700; color: var(--navy-900);" th:text="${request.title}">Item Title</h2>
+                        <p style="color: var(--slate-600); font-size: 14px; margin-top: 6px;" th:text="${request.description}">Description</p>
+                        <div style="margin-top: 8px; font-size: 13px; color: var(--slate-500);">
+                            📅 Needed Period: <strong style="color: var(--slate-800);" th:text="${request.startDate}">Start</strong> &rarr; <strong style="color: var(--slate-800);" th:text="${request.endDate}">End</strong>
+                        </div>
+                    </div>
+
+                    <!-- Cancel button if OPEN -->
+                    <div th:if="${request.status == 'OPEN'}">
+                        <form th:action="@{/wanted-items/{id}/cancel(id=${request.id})}" method="post" onsubmit="return confirm('Are you sure you want to cancel this request?');">
+                            <button type="submit" class="btn btn-secondary" style="color: var(--red-600); border-color: rgba(220, 38, 38, 0.3);">
+                                ✕ Cancel Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Offers for this request -->
+                <div class="offers-section">
+                    <h3 class="offers-title">
+                        <span>🤝 Offers Received</span>
+                        <span class="badge badge-tag" th:text="${#lists.size(offersMap.get(request.id))}">0</span>
+                    </h3>
+
+                    <!-- No offers yet -->
+                    <div th:if="${#lists.isEmpty(offersMap.get(request.id))}" style="color: var(--slate-500); font-size: 13.5px; padding: 12px 0;">
+                        No offers received yet. Peers will reach out when they can lend their listed resources.
+                    </div>
+
+                    <!-- Offer cards -->
+                    <div th:unless="${#lists.isEmpty(offersMap.get(request.id))}">
+                        <div class="offer-item-card" th:each="offer : ${offersMap.get(request.id)}">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <strong style="color: var(--navy-900); font-size: 15px;" th:text="${offer.offeredItem.title}">Offered Item Title</strong>
+                                    <span class="badge" th:classappend="${offer.status}" th:text="${offer.status}">PENDING</span>
+                                </div>
+                                <div style="font-size: 13px; color: var(--slate-600); margin-bottom: 4px;">
+                                    Offered by: <strong th:text="${offer.offeredBy.fullName}">Student Name</strong> (<span th:text="${offer.offeredBy.department}">Dept</span>)
+                                </div>
+                                <div style="font-size: 12.5px; color: var(--slate-500);">
+                                    Available: <span th:text="${offer.startDate}">Start</span> &rarr; <span th:text="${offer.endDate}">End</span>
+                                </div>
+                                <div th:if="${offer.message != null and !offer.message.isEmpty()}"
+                                     style="font-size: 13px; color: var(--slate-700); background: rgba(0,0,0,0.03); padding: 8px 10px; border-radius: 6px; margin-top: 6px;">
+                                    💬 &ldquo;<span th:text="${offer.message}">Message</span>&rdquo;
+                                </div>
+                            </div>
+
+                            <!-- Actions if PENDING and Request is OPEN -->
+                            <div class="offer-actions" th:if="${offer.status == 'PENDING' and request.status == 'OPEN'}">
+                                <form th:action="@{/offers/{id}/accept(id=${offer.id})}" method="post">
+                                    <button type="submit" class="btn btn-success">
+                                        ✓ Accept Offer
+                                    </button>
+                                </form>
+                                <form th:action="@{/offers/{id}/reject(id=${offer.id})}" method="post">
+                                    <button type="submit" class="btn btn-danger">
+                                        ✕ Reject
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <a th:href="@{/wanted-items}" class="back-link">
+            &larr; Back to Wanted Board
+        </a>
+
+    </main>
+
+</body>
+</html>

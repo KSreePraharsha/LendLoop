@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LendLoop | My Listings</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .listing-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .listing-card:hover {
+            transform: translateY(-2px);
+            border-color: #93c5fd;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-meta-box {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            margin: 16px 0 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item active">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="page-header page-header-actions">
+            <div>
+                <h1 class="page-header-title">My Resource Listings</h1>
+                <p class="page-header-desc">Manage and track items you have published to the campus sharing pool.</p>
+            </div>
+            <a th:href="@{/items/add}" href="/items/add" class="btn btn-primary">+ Add New Item</a>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" th:if="${#lists.isEmpty(items)}">
+            <div class="empty-state-icon">📦</div>
+            <h3 class="empty-state-title">You haven't listed any items yet</h3>
+            <p class="empty-state-text">
+                Start sharing useful textbooks, calculators, or lab kits with your campus community.
+            </p>
+            <a th:href="@{/items/add}" class="btn btn-primary">+ List Your First Item</a>
+        </div>
+
+        <!-- Listings Grid -->
+        <section class="listings-grid" th:unless="${#lists.isEmpty(items)}">
+
+            <div class="listing-card" th:each="item : ${items}">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px;">
+                        <span class="badge badge-tag" th:text="${item.category}">Category</span>
+                        <span class="badge badge-available" th:if="${item.available}">Available</span>
+                        <span class="badge badge-unavailable" th:unless="${item.available}">Unavailable</span>
+                    </div>
+
+                    <h3 style="font-size: 18px; font-weight: 700; color: var(--navy-900); margin-bottom: 8px;" th:text="${item.title}">Item Title</h3>
+
+                    <p style="color: var(--slate-600); font-size: 14px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;"
+                       th:text="${item.description}">Item Description</p>
+                </div>
+
+                <div class="card-meta-box">
+                    <div>
+                        <span style="color: var(--slate-500); font-size: 12px; display: block;">Condition</span>
+                        <strong style="color: var(--slate-800);" th:text="${item.itemCondition}">Good</strong>
+                    </div>
+                    <div>
+                        <span style="color: var(--slate-500); font-size: 12px; display: block;">Lending Limit</span>
+                        <strong style="color: var(--slate-800);"><span th:text="${item.maxBorrowDays}">7</span> Days</strong>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <a th:href="@{/dashboard}" href="/dashboard" class="back-link">
+            &larr; Back to Dashboard
+        </a>
+
+    </main>
+
+</body>
+</html>

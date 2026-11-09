@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LendLoop | My Profile</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .profile-container-card {
+            max-width: 680px;
+            margin: 0 auto;
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-header-box {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid var(--slate-200);
+            margin-bottom: 28px;
+        }
+
+        .profile-avatar {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #38bdf8, var(--teal-600));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35);
+            flex-shrink: 0;
+        }
+
+        .profile-header-text h1 {
+            color: var(--navy-900);
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            letter-spacing: -0.4px;
+        }
+
+        .profile-header-text p {
+            color: var(--slate-500);
+            font-size: 14px;
+        }
+
+        .profile-info-table {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .profile-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--slate-100);
+        }
+
+        .profile-row:last-child {
+            border-bottom: none;
+        }
+
+        .profile-key {
+            color: var(--slate-500);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .profile-val {
+            color: var(--slate-900);
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .profile-header-box {
+                flex-direction: column;
+                text-align: center;
+            }
+            .profile-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .profile-container-card {
+                padding: 26px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item active">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="profile-container-card">
+
+            <div class="profile-header-box">
+                <div class="profile-avatar" th:text="${#strings.substring(student.fullName, 0, 1)}">S</div>
+                <div class="profile-header-text">
+                    <h1 th:text="${student.fullName}">Student Name</h1>
+                    <p>Verified LendLoop Campus Member</p>
+                </div>
+            </div>
+
+            <div class="profile-info-table">
+                <div class="profile-row">
+                    <span class="profile-key">Full Name</span>
+                    <span class="profile-val" th:text="${student.fullName}">Full Name</span>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-key">College Email</span>
+                    <span class="profile-val" th:text="${student.email}">student@college.edu</span>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-key">Roll Number</span>
+                    <span class="profile-val" th:text="${student.rollNumber}">CS101</span>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-key">Department</span>
+                    <span class="badge badge-tag" style="font-size: 13px;" th:text="${student.department}">Computer Science</span>
+                </div>
+            </div>
+
+            <a th:href="@{/dashboard}" href="/dashboard" class="back-link">
+                &larr; Back to Dashboard
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

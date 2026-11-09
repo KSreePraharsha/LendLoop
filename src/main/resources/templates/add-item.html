@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item | LendLoop</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .form-container-card {
+            max-width: 660px;
+            margin: 0 auto;
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-header-box {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .form-header-box h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--navy-900);
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-header-box p {
+            color: var(--slate-500);
+            font-size: 14.5px;
+        }
+
+        .field-help {
+            font-size: 12.5px;
+            color: var(--slate-400);
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item active">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="form-container-card">
+
+            <div class="form-header-box">
+                <h1>List a Campus Resource</h1>
+                <p>Share your textbooks, electronics, or lab tools with peers across campus.</p>
+            </div>
+
+            <form th:action="@{/items/add}"
+                  th:object="${item}"
+                  method="post">
+
+                <!-- Item Title -->
+                <div class="form-group">
+                    <label for="title" class="form-label">Resource Name</label>
+                    <input type="text"
+                           id="title"
+                           class="form-control"
+                           th:field="*{title}"
+                           placeholder="e.g. Calculus: Early Transcendentals, Arduino Starter Kit">
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('title')}"
+                          th:errors="*{title}"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description" class="form-label">Description & Included Accessories</label>
+                    <textarea id="description"
+                              class="form-control"
+                              th:field="*{description}"
+                              placeholder="Detail edition, semester relevance, included cables/sensors, and pickup notes..."></textarea>
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('description')}"
+                          th:errors="*{description}"></span>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label for="category" class="form-label">Category</label>
+                    <select id="category" class="form-control" th:field="*{category}">
+                        <option value="">-- Select Category --</option>
+                        <option value="Books and Notes">📚 Books &amp; Notes</option>
+                        <option value="Electronics">💻 Electronics &amp; Gadgets</option>
+                        <option value="Lab Equipment">🔬 Lab Equipment &amp; Apparatus</option>
+                        <option value="Sports Equipment">⚽ Sports Equipment</option>
+                        <option value="Stationery">✏️ Stationery &amp; Drawing Tools</option>
+                        <option value="Others">📦 Others</option>
+                    </select>
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('category')}"
+                          th:errors="*{category}"></span>
+                </div>
+
+                <!-- Condition -->
+                <div class="form-group">
+                    <label for="itemCondition" class="form-label">Item Condition</label>
+                    <select id="itemCondition" class="form-control" th:field="*{itemCondition}">
+                        <option value="">-- Select Condition --</option>
+                        <option value="New">✨ New / Unused</option>
+                        <option value="Like New">👍 Like New (Mint condition)</option>
+                        <option value="Good">👌 Good (Minor signs of use)</option>
+                        <option value="Fair">⚡ Fair (Fully functional)</option>
+                    </select>
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('itemCondition')}"
+                          th:errors="*{itemCondition}"></span>
+                </div>
+
+                <!-- Maximum Borrow Days -->
+                <div class="form-group">
+                    <label for="maxBorrowDays" class="form-label">Maximum Lending Duration (Days)</label>
+                    <input type="number"
+                           id="maxBorrowDays"
+                           class="form-control"
+                           th:field="*{maxBorrowDays}"
+                           min="1"
+                           max="90"
+                           placeholder="Example: 7">
+                    <span class="field-help">Allowed lending period before the item must be returned (1 to 90 days).</span>
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('maxBorrowDays')}"
+                          th:errors="*{maxBorrowDays}"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary btn-block" style="padding: 13px; font-size: 15px; margin-top: 10px;">
+                    Publish Listing to Campus
+                </button>
+
+            </form>
+
+            <a th:href="@{/dashboard}" class="back-link">
+                &larr; Back to Dashboard
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

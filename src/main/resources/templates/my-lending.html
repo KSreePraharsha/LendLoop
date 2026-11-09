@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Lending - LendLoop</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .lending-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .lending-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 26px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            transition: var(--transition);
+        }
+
+        .lending-card:hover {
+            border-color: #93c5fd;
+            box-shadow: var(--shadow-md);
+        }
+
+        .lending-main h3 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 8px;
+        }
+
+        .lending-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px 20px;
+            font-size: 13.5px;
+            margin-top: 8px;
+        }
+
+        .meta-field-label {
+            color: var(--slate-500);
+            font-size: 12px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .meta-field-val {
+            color: var(--slate-800);
+            font-weight: 600;
+        }
+
+        .lending-actions-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .lending-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .lending-actions-group {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .lending-actions-group form {
+                flex: 1;
+            }
+            .lending-actions-group button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item active">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="page-header page-header-actions">
+            <div>
+                <h1 class="page-header-title">My Lending Activity</h1>
+                <p class="page-header-desc">Track items you have lent to other students and handle pending return confirmations.</p>
+            </div>
+            <a th:href="@{/my-listings}" class="btn btn-secondary">View My Listings</a>
+        </div>
+
+        <!-- Feedback Banners -->
+        <div th:if="${param.returnConfirmed}" class="alert alert-success">
+            <span style="font-size: 18px;">✓</span>
+            <span>Item return confirmed successfully! The item is now marked as available again.</span>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-error">
+            <span style="font-size: 18px;">⚠️</span>
+            <span>Could not confirm return. Please verify that a return was requested.</span>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" th:if="${#lists.isEmpty(borrowings)}">
+            <div class="empty-state-icon">📤</div>
+            <h3 class="empty-state-title">No lending activity found</h3>
+            <p class="empty-state-text">
+                Items you lend out to classmates will appear here with active borrowing periods and return request controls.
+            </p>
+            <a th:href="@{/my-listings}" class="btn btn-primary">Check My Listings</a>
+        </div>
+
+        <!-- Lending List -->
+        <div class="lending-list" th:unless="${#lists.isEmpty(borrowings)}">
+
+            <div class="lending-card" th:each="borrowing : ${borrowings}">
+                <div class="lending-main">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;">
+                        <span class="badge badge-tag" th:text="${borrowing.item.category}">Category</span>
+                        <h3 th:text="${borrowing.item.title}" style="display: inline; margin: 0;">Item Title</h3>
+                        <span class="badge" th:classappend="${borrowing.status}" th:text="${borrowing.status}">ACTIVE</span>
+                    </div>
+
+                    <div class="lending-meta-grid">
+                        <div>
+                            <span class="meta-field-label">Borrower</span>
+                            <span class="meta-field-val" th:text="${borrowing.borrower.fullName}">Borrower Name</span>
+                        </div>
+                        <div>
+                            <span class="meta-field-label">Student Email</span>
+                            <span class="meta-field-val" th:text="${borrowing.borrower.email}">borrower@college.edu</span>
+                        </div>
+                        <div>
+                            <span class="meta-field-label">Borrow Period</span>
+                            <span class="meta-field-val">
+                                <span th:text="${borrowing.startDate}">Start Date</span> &rarr; <span th:text="${borrowing.dueDate}">Due Date</span>
+                            </span>
+                        </div>
+                        <div th:if="${borrowing.actualReturnDate != null}">
+                            <span class="meta-field-label">Returned On</span>
+                            <span class="meta-field-val" style="color: var(--green-700);" th:text="${borrowing.actualReturnDate}">Return Date</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button if RETURN_REQUESTED -->
+                <div class="lending-actions-group">
+                    <form th:if="${borrowing.status == 'RETURN_REQUESTED'}"
+                          th:action="@{/borrowings/{id}/confirm-return(id=${borrowing.id})}"
+                          method="post">
+                        <button type="submit" class="btn btn-success">
+                            ✓ Confirm Return
+                        </button>
+                    </form>
+
+                    <div th:if="${borrowing.status == 'ACTIVE'}"
+                         style="font-size: 13px; font-weight: 600; color: #0369a1; background: #e0f2fe; border: 1px solid rgba(2, 132, 199, 0.3); padding: 8px 14px; border-radius: var(--radius-md);">
+                        🔄 Currently Borrowed
+                    </div>
+
+                    <div th:if="${borrowing.status == 'RETURNED'}"
+                         style="font-size: 13px; font-weight: 600; color: var(--slate-600); background: var(--slate-100); border: 1px solid var(--slate-200); padding: 8px 14px; border-radius: var(--radius-md);">
+                        ✓ Return Completed
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <a th:href="@{/dashboard}" href="/dashboard" class="back-link">
+            &larr; Back to Dashboard
+        </a>
+
+    </main>
+
+</body>
+</html>

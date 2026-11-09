@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Wanted Item - LendLoop</title>
+    <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
+
+    <style>
+        .form-card {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Unified Inner Navigation -->
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
+                <span class="nav-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <span>LendLoop</span>
+            </a>
+
+            <div class="nav-menu">
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item">Dashboard</a>
+                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item active">Wanted Board</a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+            </div>
+
+            <div class="nav-actions">
+                <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+
+        <div class="page-header" style="text-align: center; max-width: 680px; margin: 0 auto 28px;">
+            <h1 class="page-header-title">Post a Wanted Item</h1>
+            <p class="page-header-desc">Can't find what you need in the catalog? Post a request so classmates who own it can make you an offer.</p>
+        </div>
+
+        <!-- Error Alert -->
+        <div th:if="${errorMessage}" class="alert alert-error" style="max-width: 680px; margin: 0 auto 24px;">
+            <span style="font-size: 18px;">⚠️</span>
+            <span th:text="${errorMessage}">Error message</span>
+        </div>
+
+        <div class="form-card">
+            <form th:action="@{/wanted-items/post}" th:object="${wantedItem}" method="post">
+
+                <div class="form-group">
+                    <label class="form-label" for="title">Item Name or Title *</label>
+                    <input type="text" id="title" th:field="*{title}" class="form-control"
+                           placeholder="e.g., TI-84 Plus Graphing Calculator, Linear Algebra 5th Ed." required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="category">Category *</label>
+                    <select id="category" th:field="*{category}" class="form-select" required>
+                        <option value="">Select Category</option>
+                        <option value="Textbooks">Textbooks</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Lab Equipment">Lab Equipment</option>
+                        <option value="Calculators">Calculators</option>
+                        <option value="Stationery">Stationery</option>
+                        <option value="Sports & Fitness">Sports & Fitness</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="description">Detailed Description & Specifications *</label>
+                    <textarea id="description" th:field="*{description}" class="form-textarea" rows="4"
+                              placeholder="Describe the edition, model, course requirement, or specific condition you need..." required></textarea>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="startDate">Needed From *</label>
+                        <input type="date" id="startDate" th:field="*{startDate}" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="endDate">Needed Until *</label>
+                        <input type="date" id="endDate" th:field="*{endDate}" class="form-control" required>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 14px; margin-top: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 2;">
+                        📢 Publish Request
+                    </button>
+                    <a th:href="@{/wanted-items}" class="btn btn-secondary" style="flex: 1; text-align: center;">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px;">
+            <a th:href="@{/wanted-items}" class="back-link">
+                &larr; Back to Wanted Board
+            </a>
+        </div>
+
+    </main>
+
+</body>
+</html>
