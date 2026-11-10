@@ -41,7 +41,7 @@ USER lendloop
 
 # Default port configuration with 8081 fallback
 ENV PORT=8081
-EXPOSE 8081
 
 # Launch Spring Boot with dynamic PORT binding and container-aware memory tuning
-ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Dserver.port=${PORT:-8081} -jar app.jar"]
+# UseSerialGC reduces GC overhead on Render's 512 MB free-tier instances
+ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:+UseSerialGC -XX:MaxRAMPercentage=75.0 -Dserver.port=${PORT:-8081} -jar app.jar"]

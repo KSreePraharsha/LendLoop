@@ -32,7 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-# Local database configuration
-application.properties
+# Local environment overrides (do NOT ignore src/main/resources/application.properties)
+/application.properties
 .env
 startup-error.txt

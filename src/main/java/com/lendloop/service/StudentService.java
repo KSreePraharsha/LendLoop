@@ -4,11 +4,15 @@ package com.lendloop.service;
 import com.lendloop.model.Student;
 import com.lendloop.repository.StudentRepository;
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentService {
+public class StudentService implements UserDetailsService {
 
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
@@ -19,6 +23,24 @@ public class StudentService {
 
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    // ----------------------------------------------------------------
+    // UserDetailsService — called by Spring Security on every login
+    // ----------------------------------------------------------------
+    @Override
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
+
+        Student student = studentRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(
+                                "No student registered with email: " + email));
+
+        return User.withUsername(student.getEmail())
+                .password(student.getPassword())
+                .roles("STUDENT")
+                .build();
     }
 
     // Register a new student
@@ -40,23 +62,11 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    // Authenticate student login
-    public Student authenticateStudent(
-            String email, String rawPassword) {
-
-        Student student = studentRepository.findByEmail(email)
-                .orElse(null);
-
-        if (student == null) {
-            return null;
-        }
-
-        if (passwordEncoder.matches(
-                rawPassword, student.getPassword())) {
-            return student;
-        }
-
-        return null;
+    // Find student by their email (used to populate session after login)
+    public Student findStudentByEmail(String email) {
+        return studentRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Student not found!"));
     }
 
     // Find student using ID

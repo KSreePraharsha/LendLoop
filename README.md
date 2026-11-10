@@ -23,6 +23,7 @@
 - [Database Setup](#-database-setup)
 - [Configuration Guide](#-configuration-guide)
 - [How to Run (Windows & Maven Wrapper)](#-how-to-run-windows--maven-wrapper)
+- [Render Deployment Guide](#-render-deployment-guide)
 - [Accessing the Application](#-accessing-the-application)
 - [User Interface & Screenshots](#-user-interface--screenshots)
 - [Testing & Quality Assurance](#-testing--quality-assurance)
@@ -367,56 +368,46 @@ Before launching LendLoop, ensure your local development workstation has the fol
 
 ## 🔒 Configuration Guide
 
-### Configuring Local Credentials Securely
+The committed `src/main/resources/application.properties` reads all datasource settings from **environment variables**. No credentials are stored in source code.
 
-To keep credentials secure, create your local `src/main/resources/application.properties` file based on `application-example.properties`. Do not commit real passwords to version control.
+### Required Environment Variables
 
-#### Template: `application-example.properties`
+| Variable | Purpose | Example value (format only — do not use real values) |
+|----------|---------|------------------------------------------------------|
+| `DB_URL` | Full JDBC connection URL to your cloud MySQL database | `jdbc:mysql://host:3306/dbname?sslMode=REQUIRED` |
+| `DB_USERNAME` | Database user | `lendloop_user` |
+| `DB_PASSWORD` | Database password | *(set in your environment — never committed)* |
 
-```properties
-# ===================================================================
-# LendLoop Configuration Template (application-example.properties)
-# ===================================================================
+### Optional Environment Variables
 
-spring.application.name=lendloop
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `PORT` | `8081` | HTTP port (Render sets this automatically) |
+| `SHOW_SQL` | `false` | Set `true` locally to log Hibernate SQL |
 
-# Database Configuration with Environment Variable Support
-spring.datasource.url=jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:lendloop}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-spring.datasource.username=${DB_USERNAME}
-spring.datasource.password=${DB_PASSWORD}
+### Setting Credentials for Local Development (Windows)
 
-# JPA / Hibernate Configuration
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+Use the dedicated `local` profile to automatically connect to your local MySQL (`jdbc:mysql://localhost:3306/lendloop` on port 8081). Supply your local password via the `DB_PASSWORD` environment variable:
 
-# Server Port
-server.port=8081
-```
-
-### Setting Database Credentials on Windows
-
-You can supply credentials using environment variables so that your password is never hardcoded.
-
-#### Option A: In Windows PowerShell (Current Session)
+#### PowerShell
 ```powershell
-$env:DB_USERNAME = "YOUR_DB_USER"
-$env:DB_PASSWORD = "YOUR_SECURE_PASSWORD"
+$env:DB_PASSWORD = "your_local_password"
+.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
-#### Option B: In Windows Command Prompt (CMD)
+Or running the packaged JAR:
+```powershell
+$env:DB_PASSWORD = "your_local_password"
+java -Dspring.profiles.active=local -jar target/lendloop-0.0.1-SNAPSHOT.jar
+```
+
+#### Command Prompt
 ```cmd
-set DB_USERNAME=YOUR_DB_USER
-set DB_PASSWORD=YOUR_SECURE_PASSWORD
+set DB_PASSWORD=your_local_password
+mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
-#### Option C: In Local `application.properties` (Uncommitted)
-Alternatively, create `src/main/resources/application.properties` locally and substitute your credentials directly, ensuring `application.properties` remains in `.gitignore`:
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/lendloop
-spring.datasource.username=YOUR_DB_USER
-spring.datasource.password=YOUR_SECURE_PASSWORD
-```
+> **Note:** The `local` profile activates only when explicitly passed via `-Dspring.profiles.active=local` or `-Dspring-boot.run.profiles=local`. On Render, no profile is activated, so the root `application.properties` (driven by `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD`) takes full effect.
 
 ---
 
@@ -510,6 +501,87 @@ The following core workflows have been designed and manually verified during fea
 5. **Return Lifecycle:** Tests the borrower requesting a return (`RETURN_REQUESTED`), the owner confirming receipt (`RETURNED`), and restoring item availability.
 6. **Wanted Items & Offers:** Tests posting wanted items, offering owned items, withdrawing offers, rejecting offers, and accepting offers with automatic borrowing creation.
 7. **Pessimistic Row Locking:** Employs `PESSIMISTIC_WRITE` on `WantedItem` and `Item` repositories to prevent race conditions during acceptance.
+
+---
+
+## 🚢 Render Deployment Guide
+
+> **Status:** Not yet deployed. The steps below describe how to deploy once you have a Render account and a cloud MySQL database.
+
+### Prerequisites for Deployment
+
+1. A **Render** account at [render.com](https://render.com)
+2. A cloud **MySQL-compatible** database (e.g. [Aiven](https://aiven.io), [PlanetScale](https://planetscale.com), [Railway](https://railway.app), [TiDB Cloud](https://tidbcloud.com)) — Render's free tier does not include MySQL
+3. This repository pushed to GitHub
+
+### Step 1 — Provision Your Cloud Database
+
+In your chosen provider, create a MySQL database and note the following values (the provider's dashboard will show them):
+
+- **Host** (e.g. `mysql-abc123.example.com`)
+- **Port** (usually `3306`)
+- **Database name**
+- **Username**
+- **Password**
+- **TLS/SSL requirement** — most providers require `sslMode=REQUIRED` or `useSSL=true` in the JDBC URL
+
+Construct your JDBC URL in this format (replace placeholders):
+```
+jdbc:mysql://<HOST>:<PORT>/<DATABASE>?sslMode=REQUIRED
+```
+
+> ⚠️ Do not create or paste actual credentials here. Store them only in Render's environment variable settings.
+
+### Step 2 — Create a Render Web Service
+
+1. Go to [dashboard.render.com](https://dashboard.render.com) → **New** → **Web Service**
+2. Connect your GitHub repository
+3. Configure the service:
+
+| Setting | Value |
+|---------|-------|
+| **Environment** | `Docker` |
+| **Region** | Closest to your users |
+| **Instance Type** | `Free` |
+| **Build Command** | *(leave blank — Dockerfile handles it)* |
+
+### Step 3 — Set Environment Variables in Render
+
+In your Render service → **Environment** tab, add these variables. **Never paste actual secret values into this README.**
+
+| Variable | Description |
+|----------|-------------|
+| `DB_URL` | Full JDBC URL to your cloud MySQL (see Step 1 format) |
+| `DB_USERNAME` | Your cloud database username |
+| `DB_PASSWORD` | Your cloud database password |
+| `SHOW_SQL` | Set to `false` for production |
+
+> Render automatically injects `PORT` — do **not** set it manually.
+
+### Step 4 — Deploy
+
+Click **Create Web Service**. Render will:
+1. Clone the repository
+2. Build the Docker image using the `Dockerfile`
+3. Run the container with your environment variables injected
+
+Watch the build logs for `BUILD SUCCESS` and then `Started LendloopApplication`.
+
+### Important Render Free Tier Limitations
+
+- **The service will sleep after ~15 minutes of inactivity.** The first request after sleep takes ~30–60 seconds to respond while the container restarts.
+- **The database is not included.** You must provision and pay for (or use a free tier of) a separate cloud MySQL service.
+- **512 MB RAM.** The JVM is configured with `-XX:+UseSerialGC -XX:MaxRAMPercentage=75.0` (~384 MB max heap). Memory pressure under concurrent load is possible and cannot be guaranteed without testing.
+- **Deployment is not confirmed successful until a live URL has been tested end-to-end.**
+
+### JDBC URL Examples by Provider
+
+| Provider | Sample URL format (no real values) |
+|----------|------------------------------------|
+| Aiven | `jdbc:mysql://<host>:3306/<db>?sslMode=REQUIRED` |
+| Railway | `jdbc:mysql://<host>:<port>/<db>` |
+| PlanetScale | `jdbc:mysql://<host>:3306/<db>?sslMode=REQUIRED&enabledTLSProtocols=TLSv1.2` |
+| TiDB Cloud | `jdbc:mysql://<host>:4000/<db>?sslMode=REQUIRED` |
 
 ---
 

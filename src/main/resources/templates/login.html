@@ -510,9 +510,16 @@
 
                 <!-- Error Alert Message -->
                 <div class="alert alert-error"
-                     th:if="${error}">
+                     th:if="${error != null or param.error != null}">
                     <span class="alert-icon">⚠️</span>
-                    <span th:text="${error}">Invalid email or password!</span>
+                    <span th:text="${error != null ? error : 'Invalid email or password!'}">Invalid email or password!</span>
+                </div>
+
+                <!-- Logout Message -->
+                <div class="alert alert-success"
+                     th:if="${param.logout}">
+                    <span class="alert-icon">✓</span>
+                    <span>You have been logged out successfully.</span>
                 </div>
 
                 <!-- Registration Success Message -->

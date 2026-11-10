@@ -1,0 +1,23 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Build output (rebuilt inside Docker)
+target/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Documentation (not needed in image)
+README.md
+BACKEND_ROADMAP.md
+startup-error.txt
+
+# Environment files
+.env
+

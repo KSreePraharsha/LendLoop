@@ -58,31 +58,6 @@ public class StudentController {
         return "login";
     }
 
-    // Process student login
-    @PostMapping("/login")
-    public String loginStudent(
-            @RequestParam("username") String email,
-            @RequestParam("password") String password,
-            HttpSession session,
-            Model model) {
-
-        Student student = studentService.authenticateStudent(
-                email, password);
-
-        if (student == null) {
-            model.addAttribute(
-                    "error", "Invalid email or password!");
-            return "login";
-        }
-
-        // Store student details in session
-        session.setAttribute("studentId", student.getId());
-        session.setAttribute("studentName", student.getFullName());
-
-        // Redirect to dashboard after login
-        return "redirect:/dashboard";
-    }
-
     // Display student dashboard
     @GetMapping("/dashboard")
     public String showDashboard(
@@ -126,12 +101,5 @@ public class StudentController {
             session.invalidate();
             return "redirect:/login";
         }
-    }
-
-    // Logout student
-    @GetMapping("/logout")
-    public String logoutStudent(HttpSession session) {
-        session.invalidate();
-        return "redirect:/";
     }
 }
