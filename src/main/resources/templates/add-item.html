@@ -62,16 +62,19 @@
                 <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
                 <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
                 <a th:href="@{/items/add}" href="/items/add" class="nav-item active">+ Add Item</a>
-                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
-                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
-                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
-                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
-                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listed Items</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Requests Sent</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Requests Received</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">Items I'm Borrowing</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">Items Lent Out</a>
                 <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
             </div>
 
             <div class="nav-actions">
                 <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+                <button class="nav-toggle" type="button" onclick="this.closest('.nav-container').querySelector('.nav-menu').classList.toggle('nav-open')" aria-label="Toggle navigation menu">
+                    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
             </div>
         </div>
     </nav>

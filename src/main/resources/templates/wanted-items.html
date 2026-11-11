@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,7 +104,10 @@
         <div class="nav-container">
             <a th:href="@{/dashboard}" href="/dashboard" class="nav-brand">
                 <span class="nav-brand-badge">
-                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
                 </span>
                 <span>LendLoop</span>
             </a>
@@ -113,16 +117,25 @@
                 <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
                 <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item active">Wanted Board</a>
                 <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
-                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
-                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
-                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
-                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
-                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listed Items</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Requests Sent</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Requests Received</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">Items I'm Borrowing</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">Items Lent Out</a>
                 <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
             </div>
 
             <div class="nav-actions">
                 <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+                <button class="nav-toggle" type="button"
+                    onclick="this.closest('.nav-container').querySelector('.nav-menu').classList.toggle('nav-open')"
+                    aria-label="Toggle navigation menu">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
             </div>
         </div>
     </nav>
@@ -133,7 +146,8 @@
         <div class="page-header page-header-actions">
             <div>
                 <h1 class="page-header-title">Wanted Items & Student Requests</h1>
-                <p class="page-header-desc">See what campus gear or textbooks fellow students are searching for, and make an offer to lend yours.</p>
+                <p class="page-header-desc">See what campus gear or textbooks fellow students are searching for, and
+                    make an offer to lend yours.</p>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <a th:href="@{/my-wanted-items}" class="btn btn-secondary">My Wanted Requests</a>
@@ -153,7 +167,8 @@
             <div class="empty-state-icon">📢</div>
             <h3 class="empty-state-title">No open requests right now</h3>
             <p class="empty-state-text">
-                There are currently no open wanted item requests from other students. Need something for class or lab? Be the first to post!
+                There are currently no open wanted item requests from other students. Need something for class or lab?
+                Be the first to post!
             </p>
             <a th:href="@{/wanted-items/post}" class="btn btn-primary">Post a Request</a>
         </div>
@@ -163,12 +178,14 @@
 
             <div class="wanted-card" th:each="item : ${wantedItems}">
                 <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px;">
                         <span class="badge badge-tag" th:text="${item.category}">Category</span>
                         <span class="badge" th:classappend="${item.status}" th:text="${item.status}">OPEN</span>
                     </div>
 
-                    <h3 style="font-size: 18px; font-weight: 700; color: var(--navy-900); margin-bottom: 6px;" th:text="${item.title}">Item Name</h3>
+                    <h3 style="font-size: 18px; font-weight: 700; color: var(--navy-900); margin-bottom: 6px;"
+                        th:text="${item.title}">Item Name</h3>
                     <p class="wanted-desc" th:text="${item.description}">Detailed item description...</p>
                 </div>
 
@@ -185,7 +202,8 @@
                         <div class="wanted-meta-row">
                             <span class="meta-lbl">Needed Period</span>
                             <span class="meta-val">
-                                <span th:text="${item.startDate}">Start Date</span> &rarr; <span th:text="${item.endDate}">End Date</span>
+                                <span th:text="${item.startDate}">Start Date</span> &rarr; <span
+                                    th:text="${item.endDate}">End Date</span>
                             </span>
                         </div>
                     </div>
@@ -197,7 +215,8 @@
                         </a>
                     </div>
 
-                    <div th:if="${item.requester.id == currentStudentId}" style="text-align: center; color: var(--slate-500); font-size: 13px; font-weight: 600; padding: 10px; background: var(--slate-100); border-radius: var(--radius-md);">
+                    <div th:if="${item.requester.id == currentStudentId}"
+                        style="text-align: center; color: var(--slate-500); font-size: 13px; font-weight: 600; padding: 10px; background: var(--slate-100); border-radius: var(--radius-md);">
                         📌 Posted by you
                     </div>
                 </div>
@@ -212,4 +231,5 @@
     </main>
 
 </body>
+
 </html>

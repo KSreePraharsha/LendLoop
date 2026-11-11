@@ -28,6 +28,15 @@ public class BorrowRequest {
 
     private LocalDateTime requestDate = LocalDateTime.now();
 
+    @Column(name = "requester_phone")
+    private String requesterPhone;
+
+    @Column(name = "requester_email")
+    private String requesterEmail;
+
+    @Column(name = "preferred_contact_method")
+    private String preferredContactMethod = "PHONE";
+
     public BorrowRequest() {
     }
 
@@ -77,5 +86,29 @@ public class BorrowRequest {
 
     public LocalDateTime getRequestDate() {
         return requestDate;
+    }
+
+    public String getRequesterPhone() {
+        return requesterPhone;
+    }
+
+    public void setRequesterPhone(String requesterPhone) {
+        this.requesterPhone = requesterPhone;
+    }
+
+    public String getRequesterEmail() {
+        return requesterEmail;
+    }
+
+    public void setRequesterEmail(String requesterEmail) {
+        this.requesterEmail = requesterEmail;
+    }
+
+    public String getPreferredContactMethod() {
+        return preferredContactMethod != null ? preferredContactMethod : "PHONE";
+    }
+
+    public void setPreferredContactMethod(String preferredContactMethod) {
+        this.preferredContactMethod = preferredContactMethod;
     }
 }

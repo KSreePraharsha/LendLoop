@@ -5,132 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LendLoop | Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
-
-    <style>
-        .welcome-hero {
-            background: linear-gradient(135deg, #0f172a 0%, #172554 45%, #1e3a8a 80%, #0d9488 100%);
-            border-radius: var(--radius-xl);
-            padding: 40px 36px;
-            color: var(--white);
-            margin-bottom: 36px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .welcome-hero::after {
-            content: "";
-            position: absolute;
-            right: -60px;
-            bottom: -60px;
-            width: 240px;
-            height: 240px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(94, 234, 212, 0.2) 0%, rgba(94, 234, 212, 0) 70%);
-            pointer-events: none;
-        }
-
-        .welcome-content {
-            max-width: 650px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .welcome-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px);
-            color: #5eead4;
-            padding: 5px 14px;
-            border-radius: var(--radius-full);
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 14px;
-            border: 1px solid rgba(94, 234, 212, 0.3);
-        }
-
-        .welcome-hero h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
-        }
-
-        .welcome-hero h1 span {
-            color: #38bdf8;
-        }
-
-        .welcome-hero p {
-            color: #cbd5e1;
-            font-size: 15.5px;
-            line-height: 1.6;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-            gap: 24px;
-        }
-
-        .action-card {
-            background: var(--white);
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-lg);
-            padding: 26px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .action-card:hover {
-            transform: translateY(-3px);
-            border-color: #93c5fd;
-            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.09);
-        }
-
-        .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-md);
-            background: var(--blue-50);
-            color: var(--blue-600);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            margin-bottom: 18px;
-            border: 1px solid var(--blue-100);
-        }
-
-        .action-card h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--navy-900);
-            margin-bottom: 8px;
-        }
-
-        .action-card p {
-            color: var(--slate-500);
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 22px;
-            flex: 1;
-        }
-
-        @media (max-width: 768px) {
-            .welcome-hero {
-                padding: 30px 22px;
-            }
-            .welcome-hero h1 {
-                font-size: 25px;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -146,20 +20,53 @@
             </a>
 
             <div class="nav-menu">
-                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item active">Dashboard</a>
-                <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
-                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
-                <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
-                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
-                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
-                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">Received Requests</a>
-                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
-                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
-                <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
+                <a th:href="@{/dashboard}" href="/dashboard" class="nav-item active">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </a>
+                <a th:href="@{/items}" href="/items" class="nav-item">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    Browse Items
+                </a>
+                <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">
+                    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    Wanted Board
+                </a>
+                <a th:href="@{/items/add}" href="/items/add" class="nav-item">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                    + Add Item
+                </a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">
+                    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    My Listed Items
+                </a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">
+                    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    Requests Sent
+                </a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item">
+                    <svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+                    Requests Received
+                </a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    Items I'm Borrowing
+                </a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    Items Lent Out
+                </a>
+                <a th:href="@{/profile}" href="/profile" class="nav-item">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    My Profile
+                </a>
             </div>
 
             <div class="nav-actions">
                 <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+                <button class="nav-toggle" type="button" onclick="this.closest('.nav-container').querySelector('.nav-menu').classList.toggle('nav-open')" aria-label="Toggle navigation menu">
+                    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
             </div>
         </div>
     </nav>
@@ -167,121 +74,482 @@
     <!-- Main Content -->
     <main class="page-wrapper">
 
-        <!-- Welcome Hero Banner -->
-        <section class="welcome-hero">
-            <div class="welcome-content">
-                <span class="welcome-badge">Student Dashboard</span>
+        <!-- Attractive Welcome Hero Banner with 3D Illustration -->
+        <section class="dashboard-hero">
+            <div class="dashboard-hero-content">
+                <span class="dashboard-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    Campus Resource Exchange
+                </span>
                 <h1>
-                    Welcome back, <span th:text="${studentName}">Student</span>!
+                    Welcome back, <span th:text="${studentName}" class="highlight-name">Student</span>!
                 </h1>
                 <p>
-                    Manage your campus resources, borrow books and lab tools, and connect with peers to build a sustainable sharing community.
+                    Borrow textbooks, calculators, and lab tools from classmates, share your idle resources, and coordinate safe handovers on campus.
                 </p>
+            </div>
+
+            <!-- Attractive 3D Illustration on the Right -->
+            <div class="dashboard-hero-graphic">
+                <svg viewBox="0 0 240 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="heroGradBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25"/>
+                            <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.1"/>
+                        </linearGradient>
+                        <linearGradient id="heroLaptop" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e293b"/>
+                            <stop offset="100%" stop-color="#0f172a"/>
+                        </linearGradient>
+                        <linearGradient id="heroScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38bdf8"/>
+                            <stop offset="50%" stop-color="#2563eb"/>
+                            <stop offset="100%" stop-color="#7c3aed"/>
+                        </linearGradient>
+                        <linearGradient id="heroBook1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#2dd4bf"/>
+                            <stop offset="100%" stop-color="#0d9488"/>
+                        </linearGradient>
+                        <linearGradient id="heroBook2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#818cf8"/>
+                            <stop offset="100%" stop-color="#4f46e5"/>
+                        </linearGradient>
+                        <linearGradient id="heroBook3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#a78bfa"/>
+                            <stop offset="100%" stop-color="#7c3aed"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Background Ambient Rings -->
+                    <ellipse cx="120" cy="140" rx="95" ry="26" fill="url(#heroGradBg)"/>
+                    <ellipse cx="120" cy="90" rx="80" ry="40" stroke="rgba(56, 189, 248, 0.35)" stroke-width="1.8" stroke-dasharray="4 4" transform="rotate(-15 120 90)"/>
+                    <ellipse cx="120" cy="90" rx="92" ry="46" stroke="rgba(45, 212, 191, 0.3)" stroke-width="1.8" transform="rotate(20 120 90)"/>
+
+                    <!-- 3D Isometric Platform -->
+                    <path d="M120 115 L185 142 L120 168 L55 142 Z" fill="#1e293b" opacity="0.7"/>
+                    <path d="M120 115 L185 142 L120 168 L55 142 Z" stroke="rgba(56, 189, 248, 0.5)" stroke-width="1.5"/>
+
+                    <!-- 3D Laptop Base & Screen -->
+                    <path d="M85 130 L155 130 L165 145 L75 145 Z" fill="url(#heroLaptop)"/>
+                    <path d="M85 130 L155 130 L155 80 L85 80 Z" fill="#0f172a" rx="4"/>
+                    <rect x="88" y="83" width="64" height="44" rx="2" fill="url(#heroScreen)"/>
+                    <path d="M96 95 L144 95" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+                    <path d="M96 102 L132 102" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                    <path d="M96 109 L120 109" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+
+                    <!-- 3D Floating Book Stack (Teal & Purple) -->
+                    <!-- Book 1 (Bottom) -->
+                    <path d="M150 125 L190 110 L205 116 L165 131 Z" fill="url(#heroBook1)"/>
+                    <path d="M150 125 L165 131 L165 138 L150 132 Z" fill="#0f766e"/>
+                    <path d="M165 131 L205 116 L205 123 L165 138 Z" fill="#ffffff" opacity="0.85"/>
+
+                    <!-- Book 2 (Middle) -->
+                    <path d="M148 116 L188 101 L203 107 L163 122 Z" fill="url(#heroBook2)"/>
+                    <path d="M148 116 L163 122 L163 129 L148 123 Z" fill="#3730a3"/>
+                    <path d="M163 122 L203 107 L203 114 L163 129 Z" fill="#ffffff" opacity="0.9"/>
+
+                    <!-- Book 3 (Top) -->
+                    <path d="M152 107 L192 92 L207 98 L167 113 Z" fill="url(#heroBook3)"/>
+                    <path d="M152 107 L167 113 L167 120 L152 114 Z" fill="#5b21b6"/>
+                    <path d="M167 113 L207 98 L207 105 L167 120 Z" fill="#ffffff"/>
+                    <!-- Bookmark Ribbon -->
+                    <path d="M185 95 L185 114 L180 110 L175 114 L175 99 Z" fill="#2dd4bf"/>
+
+                    <!-- Floating Resource Icons & Particles -->
+                    <circle cx="58" cy="100" r="14" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="2"/>
+                    <path d="M53 100 L63 100 M58 95 L58 105" stroke="#c4b5fd" stroke-width="2.2" stroke-linecap="round"/>
+
+                    <circle cx="180" cy="55" r="16" fill="#042f2e" stroke="#14b8a6" stroke-width="2"/>
+                    <path d="M174 55 L186 55 M180 49 L186 55 L180 61" stroke="#5eead4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+                    <!-- Sparkles in White and Cyan -->
+                    <polygon points="110,48 113,54 119,57 113,60 110,66 107,60 101,57 107,54" fill="#ffffff"/>
+                    <polygon points="68,65 70,69 74,71 70,73 68,77 66,73 62,71 66,69" fill="#38bdf8"/>
+                    <polygon points="198,138 200,141 203,142 200,143 198,146 196,143 193,142 196,141" fill="#5eead4"/>
+                </svg>
             </div>
         </section>
 
-        <!-- Quick Access Section Header -->
-        <div class="page-header">
-            <h2 class="page-header-title">Platform Hub</h2>
-            <p class="page-header-desc">Quickly navigate to your listings, requests, and current loans.</p>
-        </div>
-
-        <!-- 8 Action Cards Grid -->
-        <section class="cards-grid">
-
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">🔍</div>
-                    <h3>Browse Items</h3>
-                    <p>Discover textbooks, electronics, and lab equipment shared by other students on campus.</p>
+        <!-- Compact Summary Quick-Access Cards -->
+        <section class="summary-bar">
+            <a th:href="@{/items}" class="summary-card-item">
+                <div class="summary-icon-wrap summary-icon-borrow">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </div>
-                <a th:href="@{/items}" href="/items" class="btn btn-primary btn-block">Browse Catalog</a>
+                <div class="summary-info">
+                    <h4>Browse Catalog</h4>
+                    <p>Find peer gear available now</p>
+                </div>
+            </a>
+
+            <a th:href="@{/items/add}" class="summary-card-item">
+                <div class="summary-icon-wrap summary-icon-lend">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                </div>
+                <div class="summary-info">
+                    <h4>List a Resource</h4>
+                    <p>Share idle tools &amp; books</p>
+                </div>
+            </a>
+
+            <a th:href="@{/wanted-items}" class="summary-card-item">
+                <div class="summary-icon-wrap summary-icon-wanted">
+                    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <div class="summary-info">
+                    <h4>Wanted Board</h4>
+                    <p>See what peers need</p>
+                </div>
+            </a>
+
+            <a th:href="@{/profile}" class="summary-card-item">
+                <div class="summary-icon-wrap summary-icon-profile">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <div class="summary-info">
+                    <h4>Student Profile</h4>
+                    <p>Manage contact info &amp; account</p>
+                </div>
+            </a>
+        </section>
+
+        <!-- GROUP 1: BORROWING (Blue / Teal / Purple Palette) -->
+        <section class="dashboard-group">
+            <div class="group-header">
+                <div class="group-title-area">
+                    <span class="group-tag group-tag-borrow">BORROWING</span>
+                    <h2 class="group-title">Borrowing Hub</h2>
+                </div>
+                <span class="group-subtitle">Discover resources on campus and track your outgoing borrowing requests</span>
             </div>
 
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">➕</div>
-                    <h3>Add an Item</h3>
-                    <p>Share your spare books, calculators, and tools to help fellow students save money.</p>
+            <div class="cards-grid">
+
+                <!-- 1. Browse Items (Books, stationery and study materials illustration) -->
+                <div class="action-card card-borrow">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="bkBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#38bdf8"/>
+                                        <stop offset="100%" stop-color="#2563eb"/>
+                                    </linearGradient>
+                                    <linearGradient id="bkTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#2dd4bf"/>
+                                        <stop offset="100%" stop-color="#0d9488"/>
+                                    </linearGradient>
+                                    <linearGradient id="bkPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#c084fc"/>
+                                        <stop offset="100%" stop-color="#7c3aed"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- Bottom Book (Blue) -->
+                                <path d="M10 46 L36 34 L54 41 L28 53 Z" fill="url(#bkBlue)"/>
+                                <path d="M10 46 L28 53 L28 57 L10 50 Z" fill="#1d4ed8"/>
+                                <path d="M28 53 L54 41 L54 45 L28 57 Z" fill="#ffffff" opacity="0.9"/>
+                                <!-- Middle Book (Teal) -->
+                                <path d="M8 38 L34 26 L52 33 L26 45 Z" fill="url(#bkTeal)"/>
+                                <path d="M8 38 L26 45 L26 49 L8 42 Z" fill="#0f766e"/>
+                                <path d="M26 45 L52 33 L52 37 L26 49 Z" fill="#ffffff" opacity="0.9"/>
+                                <!-- Top Book (Purple) -->
+                                <path d="M11 29 L37 17 L55 24 L29 36 Z" fill="url(#bkPurple)"/>
+                                <path d="M11 29 L29 36 L29 40 L11 33 Z" fill="#6d28d9"/>
+                                <path d="M29 36 L55 24 L55 28 L29 40 Z" fill="#ffffff"/>
+                                <!-- Stationery: 3D Ruler and Pen -->
+                                <path d="M38 12 L44 8 L58 40 L52 44 Z" fill="#38bdf8" opacity="0.85"/>
+                                <line x1="43" y1="18" x2="48" y2="15" stroke="#ffffff" stroke-width="1.5"/>
+                                <line x1="46" y1="25" x2="51" y2="22" stroke="#ffffff" stroke-width="1.5"/>
+                                <line x1="49" y1="32" x2="54" y2="29" stroke="#ffffff" stroke-width="1.5"/>
+                                <!-- Pen -->
+                                <path d="M18 14 L23 10 L42 38 L37 42 Z" fill="#7c3aed"/>
+                                <polygon points="18,14 15,13 19,18" fill="#fbbf24"/>
+                            </svg>
+                        </div>
+                        <h3>Browse Items</h3>
+                        <p>Explore textbooks, calculators, electronics, and lab equipment shared by other students across campus.</p>
+                    </div>
+                    <a th:href="@{/items}" href="/items" class="btn btn-primary btn-block">Browse Catalog</a>
                 </div>
-                <a th:href="@{/items/add}" href="/items/add" class="btn btn-primary btn-block">List Resource</a>
+
+                <!-- 2. Requests Sent (Document and paper-plane illustration) -->
+                <div class="action-card card-borrow">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="docGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffffff"/>
+                                        <stop offset="100%" stop-color="#f1f5f9"/>
+                                    </linearGradient>
+                                    <linearGradient id="planeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#38bdf8"/>
+                                        <stop offset="50%" stop-color="#2563eb"/>
+                                        <stop offset="100%" stop-color="#7c3aed"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 3D Document in Background -->
+                                <path d="M12 20 L34 10 L44 14 L44 48 L22 58 L12 54 Z" fill="url(#docGrad)" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="18" y1="28" x2="36" y2="20" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="18" y1="35" x2="34" y2="28" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="18" y1="42" x2="30" y2="37" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                                <!-- 3D Paper Airplane Soaring -->
+                                <path d="M54 12 L20 28 L32 38 Z" fill="url(#planeGrad)"/>
+                                <path d="M54 12 L32 38 L42 42 Z" fill="#1d4ed8"/>
+                                <path d="M32 38 L30 48 L37 41 Z" fill="#7c3aed"/>
+                                <!-- Flight trail -->
+                                <path d="M14 50 Q 20 44 26 42" stroke="#2dd4bf" stroke-width="2" stroke-dasharray="3 3" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3>Requests Sent</h3>
+                        <p>Track the real-time approval status and access direct contact details for borrowing requests you sent.</p>
+                    </div>
+                    <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="btn btn-secondary btn-block">View Requests Sent</a>
+                </div>
+
+                <!-- 3. Items I'm Borrowing (Backpack, books and laptop illustration) -->
+                <div class="action-card card-borrow">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="packGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#1e3a8a"/>
+                                        <stop offset="100%" stop-color="#0f172a"/>
+                                    </linearGradient>
+                                    <linearGradient id="laptopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#2dd4bf"/>
+                                        <stop offset="100%" stop-color="#0d9488"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 3D Backpack (Left) -->
+                                <path d="M12 28 Q 12 18 24 18 Q 36 18 36 28 L38 52 Q 38 56 32 56 L16 56 Q 10 56 12 52 Z" fill="url(#packGrad)"/>
+                                <path d="M16 34 L32 34 L32 46 L16 46 Z" fill="#2563eb" rx="2"/>
+                                <path d="M20 18 Q 24 12 28 18" stroke="#38bdf8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                                <path d="M14 30 L14 48" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round"/>
+                                <!-- 3D Laptop with glowing screen (Right) -->
+                                <path d="M30 32 L56 32 L56 46 L30 46 Z" fill="#0f172a" rx="2"/>
+                                <rect x="32" y="34" width="22" height="10" fill="url(#laptopGrad)" rx="1"/>
+                                <path d="M26 46 L60 46 L62 52 L24 52 Z" fill="#cbd5e1"/>
+                                <!-- Stacked Books in front -->
+                                <rect x="32" y="52" width="24" height="4" rx="1" fill="#7c3aed"/>
+                                <rect x="30" y="55" width="26" height="4" rx="1" fill="#38bdf8"/>
+                            </svg>
+                        </div>
+                        <h3>Items I'm Borrowing</h3>
+                        <p>Monitor active borrowed items, upcoming return deadlines, and easily coordinate returns with owners.</p>
+                    </div>
+                    <a th:href="@{/my-borrowings}" href="/my-borrowings" class="btn btn-secondary btn-block">View Borrowed Items</a>
+                </div>
+
+                <!-- 4. Wanted Board (Noticeboard and messages illustration) -->
+                <div class="action-card card-borrow">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="boardFrame" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#334155"/>
+                                        <stop offset="100%" stop-color="#1e293b"/>
+                                    </linearGradient>
+                                    <linearGradient id="boardSurface" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#f8fafc"/>
+                                        <stop offset="100%" stop-color="#e2e8f0"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 3D Notice Board Frame -->
+                                <rect x="8" y="10" width="48" height="42" rx="4" fill="url(#boardFrame)"/>
+                                <rect x="12" y="14" width="40" height="34" rx="2" fill="url(#boardSurface)"/>
+                                <!-- Sticky Note 1 (Cyan/Teal) -->
+                                <path d="M15 18 L28 18 L28 30 L25 33 L15 33 Z" fill="#ccfbf1"/>
+                                <circle cx="21" cy="20" r="1.5" fill="#0d9488"/>
+                                <line x1="17" y1="24" x2="25" y2="24" stroke="#0f766e" stroke-width="1.2"/>
+                                <line x1="17" y1="27" x2="23" y2="27" stroke="#0f766e" stroke-width="1.2"/>
+                                <!-- Sticky Note 2 (Purple) -->
+                                <path d="M32 24 L45 24 L45 38 L42 41 L32 41 Z" fill="#ede9fe"/>
+                                <circle cx="38" cy="26" r="1.5" fill="#7c3aed"/>
+                                <line x1="34" y1="31" x2="42" y2="31" stroke="#6d28d9" stroke-width="1.2"/>
+                                <line x1="34" y1="34" x2="40" y2="34" stroke="#6d28d9" stroke-width="1.2"/>
+                                <!-- Floating Megaphone -->
+                                <polygon points="34,16 46,12 46,24 34,20" fill="#38bdf8"/>
+                                <rect x="46" y="14" width="4" height="8" rx="1" fill="#2563eb"/>
+                                <path d="M37 21 L35 27 L32 27 L34 20" fill="#1e3a8a"/>
+                            </svg>
+                        </div>
+                        <h3>Wanted Board</h3>
+                        <p>Explore campus-wide wanted requests or post your own notice to receive lending offers from peers.</p>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <a th:href="@{/wanted-items}" href="/wanted-items" class="btn btn-primary" style="flex: 1; font-size: 13px;">Wanted Board</a>
+                        <a th:href="@{/my-wanted-items}" href="/my-wanted-items" class="btn btn-secondary" style="flex: 1; font-size: 13px;">My Requests</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- GROUP 2: LENDING (Teal / Purple / Blue Palette) -->
+        <section class="dashboard-group">
+            <div class="group-header">
+                <div class="group-title-area">
+                    <span class="group-tag group-tag-lend">LENDING</span>
+                    <h2 class="group-title">Lending Hub</h2>
+                </div>
+                <span class="group-subtitle">Share your resources, approve peer requests, and exchange contact information</span>
             </div>
 
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">📦</div>
-                    <h3>My Listings</h3>
-                    <p>Review and manage all items you have made available to the campus community.</p>
-                </div>
-                <a th:href="@{/my-listings}" href="/my-listings" class="btn btn-secondary btn-block">View My Listings</a>
-            </div>
+            <div class="cards-grid">
 
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">📋</div>
-                    <h3>My Borrow Requests</h3>
-                    <p>Track the real-time approval status of resource requests you have submitted to other owners.</p>
+                <!-- 1. Add an Item (3D Add/Publish resource illustration) -->
+                <div class="action-card card-lend">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="cubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#2dd4bf"/>
+                                        <stop offset="100%" stop-color="#0d9488"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 3D Isometric Resource Cube -->
+                                <path d="M32 12 L50 22 L32 32 L14 22 Z" fill="#5eead4"/>
+                                <path d="M14 22 L32 32 L32 50 L14 40 Z" fill="url(#cubeGrad)"/>
+                                <path d="M32 32 L50 22 L50 40 L32 50 Z" fill="#0f766e"/>
+                                <!-- Glowing 3D Plus Emblem -->
+                                <circle cx="32" cy="22" r="7" fill="#ffffff" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.15))"/>
+                                <path d="M32 18 L32 26 M28 22 L36 22" stroke="#0d9488" stroke-width="2.2" stroke-linecap="round"/>
+                                <!-- Sparkles -->
+                                <polygon points="12,14 13,17 16,18 13,19 12,22 11,19 8,18 11,17" fill="#38bdf8"/>
+                                <polygon points="52,38 53,40 55,41 53,42 52,44 51,42 49,41 51,40" fill="#a78bfa"/>
+                            </svg>
+                        </div>
+                        <h3>Add an Item</h3>
+                        <p>Share your spare books, calculators, lab aprons, and equipment to help classmates save money.</p>
+                    </div>
+                    <a th:href="@{/items/add}" href="/items/add" class="btn btn-primary btn-block">List Resource</a>
                 </div>
-                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="btn btn-secondary btn-block">View Requests</a>
-            </div>
 
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">📥</div>
-                    <h3>Received Requests</h3>
-                    <p>Respond to incoming borrowing requests from students who want to borrow your items.</p>
+                <!-- 2. My Listed Items (Books and resources ready to share illustration) -->
+                <div class="action-card card-lend">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="boxFront" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#14b8a6"/>
+                                        <stop offset="100%" stop-color="#0f766e"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 3D Sharing Crate -->
+                                <path d="M10 26 L54 26 L48 54 L16 54 Z" fill="url(#boxFront)"/>
+                                <path d="M10 26 L20 18 L58 18 L54 26 Z" fill="#2dd4bf"/>
+                                <path d="M16 38 L48 38" stroke="#042f2e" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+                                <!-- Books standing inside crate ready to share -->
+                                <rect x="20" y="10" width="8" height="24" rx="1.5" fill="#7c3aed" transform="rotate(-6 24 22)"/>
+                                <rect x="28" y="8" width="8" height="26" rx="1.5" fill="#38bdf8"/>
+                                <rect x="36" y="12" width="7" height="22" rx="1.5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" transform="rotate(8 39 23)"/>
+                                <!-- Verification Share Tag -->
+                                <circle cx="32" cy="46" r="6" fill="#ffffff"/>
+                                <path d="M29 46 L31 48 L35 44" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>My Listed Items</h3>
+                        <p>Review and manage all items you have made available to the campus sharing community.</p>
+                    </div>
+                    <a th:href="@{/my-listings}" href="/my-listings" class="btn btn-secondary btn-block">View My Listed Items</a>
                 </div>
-                <a th:href="@{/received-requests}" href="/received-requests" class="btn btn-secondary btn-block">Manage Requests</a>
-            </div>
 
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">🤝</div>
-                    <h3>My Borrowings</h3>
-                    <p>Monitor your active borrowings, upcoming due dates, and return schedules.</p>
+                <!-- 3. Requests Received (Incoming request illustration) -->
+                <div class="action-card card-lend">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="trayGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#1e1b4b"/>
+                                        <stop offset="100%" stop-color="#0f172a"/>
+                                    </linearGradient>
+                                    <linearGradient id="envGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffffff"/>
+                                        <stop offset="100%" stop-color="#f8fafc"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 3D Inbox Tray -->
+                                <path d="M10 34 L18 52 L46 52 L54 34 L44 34 L40 40 L24 40 L20 34 Z" fill="url(#trayGrad)"/>
+                                <path d="M10 34 L54 34 L54 36 L10 36 Z" fill="#6366f1"/>
+                                <!-- Incoming Envelope Sliding In -->
+                                <path d="M16 18 L48 18 L48 38 L16 38 Z" fill="url(#envGrad)" stroke="#cbd5e1" stroke-width="1.5" rx="2"/>
+                                <path d="M16 18 L32 30 L48 18" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <!-- 3D Floating Notification Bell with Purple Glow -->
+                                <circle cx="48" cy="14" r="10" fill="#7c3aed" filter="drop-shadow(0 2px 6px rgba(124, 58, 237, 0.4))"/>
+                                <path d="M48 9 C46 9 44 11 44 13 L43 16 L53 16 L52 13 C52 11 50 9 48 9 Z" fill="#ffffff"/>
+                                <circle cx="48" cy="18" r="1.5" fill="#facc15"/>
+                            </svg>
+                        </div>
+                        <h3>Requests Received</h3>
+                        <p>Review incoming borrowing requests from classmates, approve loans, and view contact info.</p>
+                    </div>
+                    <a th:href="@{/received-requests}" href="/received-requests" class="btn btn-secondary btn-block">Review Requests Received</a>
                 </div>
-                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="btn btn-secondary btn-block">Active Loans</a>
-            </div>
 
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">📤</div>
-                    <h3>My Lending</h3>
-                    <p>Track items you have lent out to classmates and confirm their safe return.</p>
+                <!-- 4. Items Lent Out (Resources being shared between students illustration) -->
+                <div class="action-card card-lend">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="exchangeBook" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#38bdf8"/>
+                                        <stop offset="100%" stop-color="#7c3aed"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- Shared Resource in the Center -->
+                                <rect x="22" y="20" width="20" height="24" rx="2" fill="url(#exchangeBook)" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.15))"/>
+                                <line x1="28" y1="26" x2="36" y2="26" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                                <line x1="28" y1="31" x2="34" y2="31" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                                <!-- Student Hands Exchanging -->
+                                <path d="M8 32 C12 32 16 34 20 34 L20 38 L8 38 Z" fill="#14b8a6"/>
+                                <path d="M56 32 C52 32 48 30 44 30 L44 26 L56 26 Z" fill="#6366f1"/>
+                                <!-- Looping Bidirectional Circular Arrows (LendLoop) -->
+                                <path d="M18 16 C26 10 38 10 46 16" stroke="#14b8a6" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                                <polyline points="43,10 47,16 41,18" fill="none" stroke="#14b8a6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M46 48 C38 54 26 54 18 48" stroke="#8b5cf6" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                                <polyline points="21,54 17,48 23,46" fill="none" stroke="#8b5cf6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Items Lent Out</h3>
+                        <p>Track resources currently lent out to classmates and manage return handovers easily.</p>
+                    </div>
+                    <a th:href="@{/my-lending}" href="/my-lending" class="btn btn-secondary btn-block">View Items Lent Out</a>
                 </div>
-                <a th:href="@{/my-lending}" href="/my-lending" class="btn btn-secondary btn-block">Active Lending</a>
-            </div>
 
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">📢</div>
-                    <h3>Wanted Items Board</h3>
-                    <p>Browse resources peers need or post your own request to receive lending offers from students.</p>
+                <!-- 5. My Submitted Offers (Bonus card in lending hub) -->
+                <div class="action-card card-lend">
+                    <div>
+                        <div class="action-illustration">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#8b5cf6"/>
+                                        <stop offset="100%" stop-color="#6d28d9"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 3D Handshake Award Tag -->
+                                <circle cx="32" cy="28" r="16" fill="url(#badgeGrad)"/>
+                                <path d="M24 28 C26 26 28 26 30 28 L32 30 L34 28 C36 26 38 26 40 28" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M26 31 L32 36 L38 31" stroke="#5eead4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <!-- Ribbons -->
+                                <path d="M24 40 L20 54 L28 50 L32 43" fill="#0d9488"/>
+                                <path d="M40 40 L44 54 L36 50 L32 43" fill="#14b8a6"/>
+                            </svg>
+                        </div>
+                        <h3>My Submitted Offers</h3>
+                        <p>Track the status of lending offers you have submitted to fulfill classmates' wanted requests.</p>
+                    </div>
+                    <a th:href="@{/my-offers}" href="/my-offers" class="btn btn-secondary btn-block">View My Offers</a>
                 </div>
-                <a th:href="@{/wanted-items}" href="/wanted-items" class="btn btn-primary btn-block">Explore Wanted Board</a>
-            </div>
 
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">🤝</div>
-                    <h3>My Wanted & Offers</h3>
-                    <p>Track your published wanted requests, review received lending offers, or check offers you submitted.</p>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <a th:href="@{/my-wanted-items}" href="/my-wanted-items" class="btn btn-secondary btn-block" style="flex: 1; font-size: 13px;">My Requests</a>
-                    <a th:href="@{/my-offers}" href="/my-offers" class="btn btn-secondary btn-block" style="flex: 1; font-size: 13px;">My Offers</a>
-                </div>
             </div>
-
-            <div class="action-card">
-                <div>
-                    <div class="action-icon">👤</div>
-                    <h3>My Profile</h3>
-                    <p>View your student verification details, department, roll number, and college email.</p>
-                </div>
-                <a th:href="@{/profile}" href="/profile" class="btn btn-secondary btn-block">View Profile</a>
-            </div>
-
         </section>
 
     </main>

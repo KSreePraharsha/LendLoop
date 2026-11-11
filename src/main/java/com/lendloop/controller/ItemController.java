@@ -92,9 +92,13 @@ public class ItemController {
             HttpSession session,
             Model model) {
 
-        if (session.getAttribute("studentId") == null) {
+        Long studentId = (Long) session.getAttribute("studentId");
+        if (studentId == null) {
             return "redirect:/login";
         }
+
+        Student currentStudent = studentRepository.findById(studentId).orElse(null);
+        model.addAttribute("currentStudent", currentStudent);
 
         model.addAttribute(
                 "items", itemService.getAvailableItems());
@@ -135,9 +139,13 @@ public class ItemController {
             HttpSession session,
             Model model) {
 
-        if (session.getAttribute("studentId") == null) {
+        Long studentId = (Long) session.getAttribute("studentId");
+        if (studentId == null) {
             return "redirect:/login";
         }
+
+        Student currentStudent = studentRepository.findById(studentId).orElse(null);
+        model.addAttribute("currentStudent", currentStudent);
 
         model.addAttribute(
                 "items", itemService.searchItems(keyword));

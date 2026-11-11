@@ -77,4 +77,16 @@ public class StudentService implements UserDetailsService {
                         new IllegalArgumentException(
                                 "Student not found!"));
     }
+
+    // Update student's contact details (phone number and preferred method)
+    public Student updateContactInfo(Long studentId, String phoneNumber, String preferredContactMethod) {
+        Student student = findStudentById(studentId);
+        if (phoneNumber != null) {
+            student.setPhoneNumber(phoneNumber.trim());
+        }
+        if (preferredContactMethod != null && !preferredContactMethod.isBlank()) {
+            student.setPreferredContactMethod("EMAIL".equalsIgnoreCase(preferredContactMethod) ? "EMAIL" : "PHONE");
+        }
+        return studentRepository.save(student);
+    }
 }

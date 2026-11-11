@@ -102,4 +102,27 @@ public class StudentController {
             return "redirect:/login";
         }
     }
+
+    // Update student contact details from profile page
+    @PostMapping("/profile/update-contact")
+    public String updateContact(
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(defaultValue = "PHONE") String preferredContactMethod,
+            HttpSession session) {
+
+        Long studentId = (Long) session.getAttribute("studentId");
+
+        if (studentId == null) {
+            return "redirect:/login";
+        }
+
+        if (phoneNumber == null || phoneNumber.trim().isBlank()
+                || !phoneNumber.trim().matches("^[+]?[0-9\\s\\-()]{7,20}$")) {
+            return "redirect:/profile?error=invalidphone";
+        }
+
+        studentService.updateContactInfo(studentId, phoneNumber, preferredContactMethod);
+
+        return "redirect:/profile?updated";
+    }
 }

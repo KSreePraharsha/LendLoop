@@ -1,131 +1,635 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - LendLoop</title>
+    <title>Create Student Account - LendLoop</title>
 
     <style>
+        :root {
+            --navy-950: #090d16;
+            --navy-900: #0f172a;
+            --navy-800: #1e293b;
+            --blue-600: #2563eb;
+            --blue-500: #3b82f6;
+            --cyan-400: #38bdf8;
+            --teal-500: #14b8a6;
+            --teal-400: #2dd4bf;
+            --purple-600: #7c3aed;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --white: #ffffff;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 22px;
+            --radius-full: 9999px;
+            --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #f3f6fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: var(--slate-50);
+            color: var(--navy-900);
             min-height: 100vh;
-            margin: 0;
         }
 
-        .container {
-            background: white;
-            width: 400px;
-            max-width: 92%;
-            padding: 30px;
+        .auth-split-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* ---------------- Left Branding Panel ---------------- */
+        .brand-panel {
+            flex: 1 1 45%;
+            background: linear-gradient(150deg, #090d16 0%, #0f172a 30%, #1e3a8a 70%, #0d9488 100%);
+            color: var(--white);
+            padding: 56px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-panel::before {
+            content: "";
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45, 212, 191, 0.25) 0%, rgba(56, 189, 248, 0.1) 60%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+
+        .brand-panel::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, rgba(37, 99, 235, 0.1) 60%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+
+        .brand-header {
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--white);
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-logo-badge {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--cyan-400), var(--teal-500));
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(20, 184, 166, 0.4);
         }
 
-        h1 {
-            text-align: center;
-            color: #2563eb;
+        .brand-logo-badge svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: var(--white);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        p {
-            text-align: center;
-            color: #666;
+        .brand-content {
+            position: relative;
+            z-index: 2;
+            margin: 30px 0;
+            max-width: 480px;
         }
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 9px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 12px;
-        }
-
-        .error {
-            color: red;
+        .brand-tagline-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            color: #5eead4;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
             font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border: 1px solid rgba(94, 234, 212, 0.3);
+            letter-spacing: 0.3px;
         }
 
-        a {
-            color: #2563eb;
+        .brand-heading {
+            font-size: 36px;
+            line-height: 1.2;
+            font-weight: 850;
+            margin-bottom: 16px;
+            letter-spacing: -0.8px;
+        }
+
+        .brand-heading span {
+            background: linear-gradient(135deg, #67e8f9 0%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 24px;
+        }
+
+        /* 3D Vector Community Illustration */
+        .brand-graphic-box {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: var(--radius-xl);
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-graphic-box svg {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+        }
+
+        /* Pillars List */
+        .brand-pillars {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pillar-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pillar-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: rgba(56, 189, 248, 0.18);
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pillar-text h4 {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 2px;
+        }
+
+        .pillar-text p {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.3;
+        }
+
+        .brand-footer {
+            position: relative;
+            z-index: 2;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* ---------------- Right Form Panel ---------------- */
+        .form-panel {
+            flex: 1 1 55%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px;
+            background: var(--slate-50);
+        }
+
+        .auth-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 480px;
+            padding: 38px 36px;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.05);
+            border: 1px solid var(--slate-200);
+        }
+
+        .form-header {
+            margin-bottom: 24px;
+        }
+
+        .form-header h2 {
+            font-size: 26px;
+            font-weight: 850;
+            color: var(--navy-900);
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-header p {
+            color: var(--slate-600);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Error Banner */
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13.5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Inputs */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--slate-700);
+            margin-bottom: 6px;
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--slate-300);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            color: var(--navy-900);
+            background: var(--white);
+            transition: var(--transition);
+        }
+
+        .input-control:focus {
+            outline: none;
+            border-color: var(--blue-600);
+            box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15);
+        }
+
+        .field-error {
+            display: block;
+            color: #dc2626;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--teal-500) 0%, #0d9488 100%);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 750;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(20, 184, 166, 0.35);
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+            box-shadow: 0 6px 20px rgba(20, 184, 166, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .form-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 13.5px;
+            color: var(--slate-600);
+        }
+
+        .form-footer p {
+            margin-bottom: 10px;
+        }
+
+        .form-footer a {
+            color: var(--blue-600);
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+            color: #1d4ed8;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--slate-600);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .back-link:hover {
+            color: var(--navy-900);
+        }
+
+        /* ---------------- Responsive ---------------- */
+        @media (max-width: 900px) {
+            .auth-split-wrapper {
+                flex-direction: column;
+            }
+            .brand-panel {
+                padding: 40px 24px;
+            }
+            .brand-content {
+                margin: 20px 0;
+            }
+            .brand-heading {
+                font-size: 30px;
+            }
+            .form-panel {
+                padding: 36px 20px 60px;
+            }
+            .auth-card {
+                padding: 30px 22px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="auth-split-wrapper">
 
-    <h1>LendLoop</h1>
-    <p>Create your student account</p>
+        <!-- Left Branding Panel -->
+        <aside class="brand-panel">
 
-    <form th:action="@{/register}" th:object="${student}" method="post">
+            <div class="brand-header">
+                <a th:href="@{/}" href="/" class="brand-logo">
+                    <span class="brand-logo-badge">
+                        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    </span>
+                    <span>LendLoop</span>
+                </a>
+            </div>
 
-        <input type="text"
-               th:field="*{fullName}"
-               placeholder="Full Name"
-               required>
-        <span class="error"
-              th:errors="*{fullName}"></span>
+            <div class="brand-content">
+                <div class="brand-tagline-badge">
+                    <span>★</span>
+                    <span>100% Student-Verified Community</span>
+                </div>
 
-        <input type="email"
-               th:field="*{email}"
-               placeholder="College Email"
-               required>
-        <span class="error"
-              th:errors="*{email}"></span>
+                <h1 class="brand-heading">
+                    Borrow Smarter. <br>
+                    <span>Lend Freely.</span>
+                </h1>
 
-        <input type="text"
-               th:field="*{rollNumber}"
-               placeholder="Roll Number"
-               required>
-        <span class="error"
-              th:errors="*{rollNumber}"></span>
+                <p class="brand-description">
+                    Create your free student account to share textbooks, electronics, and tools with peers on campus.
+                </p>
 
-        <input type="text"
-               th:field="*{department}"
-               placeholder="Department"
-               required>
-        <span class="error"
-              th:errors="*{department}"></span>
+                <!-- 3D Vector Community Illustration -->
+                <div class="brand-graphic-box">
+                    <svg viewBox="0 0 320 135" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="regGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#2dd4bf"/>
+                                <stop offset="100%" stop-color="#0d9488"/>
+                            </linearGradient>
+                            <linearGradient id="regGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#38bdf8"/>
+                                <stop offset="100%" stop-color="#2563eb"/>
+                            </linearGradient>
+                            <linearGradient id="regGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#c084fc"/>
+                                <stop offset="100%" stop-color="#7c3aed"/>
+                            </linearGradient>
+                        </defs>
 
-        <input type="password"
-               th:field="*{password}"
-               placeholder="Password (minimum 8 characters)"
-               minlength="8"
-               required>
-        <span class="error"
-              th:errors="*{password}"></span>
+                        <!-- Base Shadow -->
+                        <ellipse cx="160" cy="110" rx="130" ry="20" fill="rgba(45, 212, 191, 0.18)"/>
 
-        <p class="error" th:text="${error}"></p>
+                        <!-- Center Student ID Card 3D -->
+                        <rect x="95" y="30" width="130" height="75" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="drop-shadow(0 6px 14px rgba(0,0,0,0.15))"/>
+                        <circle cx="125" cy="60" r="14" fill="#dbeafe"/>
+                        <path d="M117 70 C117 64 122 62 125 62 C128 62 133 64 133 70" fill="#2563eb"/>
+                        <circle cx="125" cy="56" r="5" fill="#2563eb"/>
 
-        <button type="submit">Create Account</button>
+                        <rect x="148" y="48" width="60" height="5" rx="2" fill="#0f172a"/>
+                        <rect x="148" y="58" width="45" height="4" rx="2" fill="#64748b"/>
+                        <rect x="148" y="67" width="35" height="4" rx="2" fill="#0d9488"/>
+                        <!-- Checkmark Badge on ID -->
+                        <circle cx="215" cy="40" r="9" fill="#10b981"/>
+                        <path d="M212 40 L214 42 L218 38" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
 
-    </form>
+                        <!-- Left Resource Cube -->
+                        <path d="M50 70 L70 60 L90 70 L70 80 Z" fill="#5eead4"/>
+                        <path d="M50 70 L70 80 L70 100 L50 90 Z" fill="url(#regGrad1)"/>
+                        <path d="M70 80 L90 70 L90 90 L70 100 Z" fill="#0f766e"/>
 
-    <p>Already have an account? <a href="/login">Login</a></p>
+                        <!-- Right Book Stack -->
+                        <path d="M235 85 L275 68 L295 78 L255 95 Z" fill="url(#regGrad2)"/>
+                        <path d="M235 85 L255 95 L255 102 L235 92 Z" fill="#1d4ed8"/>
+                        <path d="M255 95 L295 78 L295 85 L255 102 Z" fill="#ffffff"/>
 
-    <p><a href="/">Back to Home</a></p>
+                        <path d="M232 75 L272 58 L292 68 L252 85 Z" fill="url(#regGrad3)"/>
+                        <path d="M232 75 L252 85 L252 92 L232 82 Z" fill="#6d28d9"/>
+                        <path d="M252 85 L292 68 L292 75 L252 92 Z" fill="#ffffff"/>
 
-</div>
+                        <!-- Sparkles -->
+                        <polygon points="90,25 92,29 96,30 92,31 90,35 88,31 84,30 88,29" fill="#38bdf8"/>
+                        <polygon points="230,30 231,33 234,34 231,35 230,38 229,35 226,34 229,33" fill="#2dd4bf"/>
+                    </svg>
+                </div>
+
+                <!-- Verified Features -->
+                <div class="brand-pillars">
+                    <div class="pillar-card">
+                        <div class="pillar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        </div>
+                        <div class="pillar-text">
+                            <h4>Campus Exclusive</h4>
+                            <p>Only verified students from your college join</p>
+                        </div>
+                    </div>
+
+                    <div class="pillar-card">
+                        <div class="pillar-icon" style="background: rgba(45, 212, 191, 0.18); color: #2dd4bf;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                        </div>
+                        <div class="pillar-text">
+                            <h4>Zero Fees</h4>
+                            <p>Completely free peer-to-peer resource loans</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brand-footer">
+                &copy; 2026 LendLoop &bull; Campus Peer-to-Peer Resource Exchange
+            </div>
+
+        </aside>
+
+        <!-- Right Form Panel -->
+        <main class="form-panel">
+
+            <div class="auth-card">
+
+                <div class="form-header">
+                    <h2>Create Account</h2>
+                    <p>Join LendLoop to start borrowing and sharing campus items.</p>
+                </div>
+
+                <!-- Error Alert Message -->
+                <div class="alert-error" th:if="${error}">
+                    <span>⚠️</span>
+                    <span th:text="${error}">Registration error</span>
+                </div>
+
+                <!-- Registration Form -->
+                <form th:action="@{/register}" th:object="${student}" method="post">
+
+                    <div class="form-group">
+                        <label for="fullName" class="form-label">Full Name *</label>
+                        <input type="text"
+                               id="fullName"
+                               th:field="*{fullName}"
+                               class="input-control"
+                               placeholder="e.g. Alex Johnson"
+                               required>
+                        <span class="field-error" th:errors="*{fullName}"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">College Email Address *</label>
+                        <input type="email"
+                               id="email"
+                               th:field="*{email}"
+                               class="input-control"
+                               placeholder="rollnumber@college.edu"
+                               required>
+                        <span class="field-error" th:errors="*{email}"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="rollNumber" class="form-label">Roll Number *</label>
+                            <input type="text"
+                                   id="rollNumber"
+                                   th:field="*{rollNumber}"
+                                   class="input-control"
+                                   placeholder="e.g. 21CS042"
+                                   required>
+                            <span class="field-error" th:errors="*{rollNumber}"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department" class="form-label">Department *</label>
+                            <input type="text"
+                                   id="department"
+                                   th:field="*{department}"
+                                   class="input-control"
+                                   placeholder="e.g. Computer Science"
+                                   required>
+                            <span class="field-error" th:errors="*{department}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password *</label>
+                        <input type="password"
+                               id="password"
+                               th:field="*{password}"
+                               class="input-control"
+                               placeholder="Minimum 8 characters"
+                               minlength="8"
+                               required>
+                        <span class="field-error" th:errors="*{password}"></span>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        Create Student Account
+                    </button>
+
+                </form>
+
+                <div class="form-footer">
+                    <p>
+                        Already registered?
+                        <a th:href="@{/login}" href="/login">Sign in here</a>
+                    </p>
+                    <a th:href="@{/}" href="/" class="back-link">&larr; Back to Home</a>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
 
 </body>
 </html>

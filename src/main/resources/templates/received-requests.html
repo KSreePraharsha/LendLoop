@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Received Requests - LendLoop</title>
+    <title>Requests Received - LendLoop</title>
     <link rel="stylesheet" th:href="@{/css/inner.css}" href="/css/inner.css">
 
     <style>
@@ -102,16 +102,19 @@
                 <a th:href="@{/items}" href="/items" class="nav-item">Browse Items</a>
                 <a th:href="@{/wanted-items}" href="/wanted-items" class="nav-item">Wanted Board</a>
                 <a th:href="@{/items/add}" href="/items/add" class="nav-item">+ Add Item</a>
-                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listings</a>
-                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Borrow Requests</a>
-                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item active">Received Requests</a>
-                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">My Borrowings</a>
-                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">My Lending</a>
+                <a th:href="@{/my-listings}" href="/my-listings" class="nav-item">My Listed Items</a>
+                <a th:href="@{/my-borrow-requests}" href="/my-borrow-requests" class="nav-item">Requests Sent</a>
+                <a th:href="@{/received-requests}" href="/received-requests" class="nav-item active">Requests Received</a>
+                <a th:href="@{/my-borrowings}" href="/my-borrowings" class="nav-item">Items I'm Borrowing</a>
+                <a th:href="@{/my-lending}" href="/my-lending" class="nav-item">Items Lent Out</a>
                 <a th:href="@{/profile}" href="/profile" class="nav-item">My Profile</a>
             </div>
 
             <div class="nav-actions">
                 <a th:href="@{/logout}" href="/logout" class="nav-btn-logout">Logout</a>
+                <button class="nav-toggle" type="button" onclick="this.closest('.nav-container').querySelector('.nav-menu').classList.toggle('nav-open')" aria-label="Toggle navigation menu">
+                    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
             </div>
         </div>
     </nav>
@@ -121,10 +124,10 @@
 
         <div class="page-header page-header-actions">
             <div>
-                <h1 class="page-header-title">Received Borrowing Requests</h1>
+                <h1 class="page-header-title">Requests Received</h1>
                 <p class="page-header-desc">Review and respond to students who want to borrow your listed resources.</p>
             </div>
-            <a th:href="@{/my-listings}" class="btn btn-secondary">View My Listings</a>
+            <a th:href="@{/my-listings}" class="btn btn-secondary">View My Listed Items</a>
         </div>
 
         <!-- Feedback Banners -->
@@ -141,11 +144,11 @@
         <!-- Empty State -->
         <div class="empty-state" th:if="${#lists.isEmpty(requests)}">
             <div class="empty-state-icon">📥</div>
-            <h3 class="empty-state-title">No incoming borrow requests</h3>
+            <h3 class="empty-state-title">No requests received yet</h3>
             <p class="empty-state-text">
                 When fellow students request to borrow your listed books, electronics, or gear, their requests will appear here for your approval.
             </p>
-            <a th:href="@{/my-listings}" class="btn btn-primary">Check My Listings</a>
+            <a th:href="@{/my-listings}" class="btn btn-primary">Check My Listed Items</a>
         </div>
 
         <!-- Incoming Requests List -->
@@ -165,7 +168,8 @@
                         </div>
                         <div>
                             <span class="meta-field-label">Student Email</span>
-                            <span class="meta-field-val" th:text="${request.borrower.email}">student@college.edu</span>
+                            <span class="meta-field-val" th:if="${request.status == 'APPROVED'}" th:text="${request.borrower.email}">student@college.edu</span>
+                            <span class="meta-field-val" th:unless="${request.status == 'APPROVED'}" style="color: var(--slate-400); font-style: italic; font-size: 12.5px;">🔒 Locked until approved</span>
                         </div>
                         <div>
                             <span class="meta-field-label">Borrow Period</span>
@@ -189,6 +193,60 @@
                             ✕ Reject
                         </button>
                     </form>
+
+                    <a th:href="@{/borrow-requests/{id}(id=${request.id})}" class="btn btn-secondary" style="font-size: 13px; padding: 8px 12px;">
+                        Details &rarr;
+                    </a>
+                </div>
+
+                <!-- Contact Info Panel when APPROVED -->
+                <div th:if="${request.status == 'APPROVED'}" style="width: 100%; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--slate-200); background: #f0fdfa; border-radius: var(--radius-md); padding: 14px; border: 1px solid #ccfbf1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+                        <span style="font-size: 13px; font-weight: 800; color: #0f766e; display: flex; align-items: center; gap: 6px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            Borrower Contact Information (Coordinate Handover)
+                        </span>
+                        <a th:href="@{/borrow-requests/{id}(id=${request.id})}" class="btn btn-secondary" style="font-size: 12px; padding: 4px 10px;">
+                            Full Request Details &rarr;
+                        </a>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; font-size: 13px;">
+                        <div>
+                            <span style="color: var(--slate-500); font-size: 11.5px; display: block;">Contact Number</span>
+                            <strong th:if="${request.requesterPhone != null and !request.requesterPhone.isBlank()}"
+                                    th:text="${request.requesterPhone}" style="color: var(--navy-900);">+91 9876543210</strong>
+                            <strong th:unless="${request.requesterPhone != null and !request.requesterPhone.isBlank()}"
+                                    th:text="${request.borrower.phoneNumber != null ? request.borrower.phoneNumber : 'Not provided'}" style="color: var(--navy-900);">+91 9876543210</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--slate-500); font-size: 11.5px; display: block;">Student Email</span>
+                            <strong th:text="${request.requesterEmail != null and !request.requesterEmail.isBlank() ? request.requesterEmail : request.borrower.email}" style="color: var(--navy-900);">borrower@college.edu</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--slate-500); font-size: 11.5px; display: block;">Preferred Method</span>
+                            <span class="badge badge-tag" th:text="${request.preferredContactMethod != null ? request.preferredContactMethod : 'PHONE'}">PHONE</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center;">
+                        <a th:if="${(request.requesterPhone != null and !request.requesterPhone.isBlank()) or (request.borrower.phoneNumber != null and !request.borrower.phoneNumber.isBlank())}"
+                           th:href="'tel:' + ${request.requesterPhone != null ? request.requesterPhone : request.borrower.phoneNumber}"
+                           style="background: #10b981; color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; text-decoration: none;">
+                            📞 Call Borrower
+                        </a>
+                        <a th:href="'mailto:' + ${request.requesterEmail != null ? request.requesterEmail : request.borrower.email}"
+                           style="background: #2563eb; color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; text-decoration: none;">
+                            ✉️ Email Borrower
+                        </a>
+                        <button th:if="${(request.requesterPhone != null and !request.requesterPhone.isBlank()) or (request.borrower.phoneNumber != null and !request.borrower.phoneNumber.isBlank())}"
+                                type="button"
+                                th:onclick="'copyNumber(\'' + ${request.requesterPhone != null ? request.requesterPhone : request.borrower.phoneNumber} + '\', this)'"
+                                style="background: #fff; border: 1px solid var(--slate-300); color: var(--slate-700); padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                            📋 Copy Number
+                        </button>
+                        <span class="copy-feedback" style="display: none; font-size: 11px; color: #059669; font-weight: 600;">Copied!</span>
+                    </div>
                 </div>
             </div>
 
@@ -199,6 +257,21 @@
         </a>
 
     </main>
+
+    <script>
+        function copyNumber(text, btn) {
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(function() {
+                var feedback = btn.parentElement.querySelector('.copy-feedback');
+                if (feedback) {
+                    feedback.style.display = 'inline';
+                    setTimeout(function() {
+                        feedback.style.display = 'none';
+                    }, 2000);
+                }
+            });
+        }
+    </script>
 
 </body>
 </html>

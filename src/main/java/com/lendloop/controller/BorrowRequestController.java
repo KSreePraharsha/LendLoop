@@ -37,7 +37,7 @@ public class BorrowRequestController {
         this.studentRepository = studentRepository;
     }
 
-    // Send a borrowing request
+    // Send a borrowing request with student contact information
     @PostMapping("/borrow/{itemId}")
     public String sendRequest(
             @PathVariable Long itemId,
@@ -45,6 +45,9 @@ public class BorrowRequestController {
             LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate endDate,
+            @RequestParam(required = false) String contactNumber,
+            @RequestParam(required = false) String email,
+            @RequestParam(defaultValue = "PHONE") String preferredContactMethod,
             HttpSession session) {
 
         Long studentId = (Long) session.getAttribute("studentId");
@@ -82,15 +85,47 @@ public class BorrowRequestController {
             return "redirect:/items?error=duration";
         }
 
+        // Validate contact number (required)
+        String resolvedPhone = contactNumber != null ? contactNumber.trim() : "";
+        if (resolvedPhone.isBlank() && borrower.getPhoneNumber() != null) {
+            resolvedPhone = borrower.getPhoneNumber().trim();
+        }
+
+        if (resolvedPhone.isBlank() || !resolvedPhone.matches("^[+]?[0-9\\s\\-()]{7,20}$")) {
+            return "redirect:/items?error=invalidphone";
+        }
+
+        // Validate email address
+        String resolvedEmail = (email != null && !email.trim().isBlank())
+                ? email.trim()
+                : borrower.getEmail();
+
+        if (resolvedEmail == null || !resolvedEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            return "redirect:/items?error=invalidemail";
+        }
+
+        // Validate preferred contact method
+        String method = "EMAIL".equalsIgnoreCase(preferredContactMethod) ? "EMAIL" : "PHONE";
+
+        // Update borrower's profile phone if not already present
+        if (borrower.getPhoneNumber() == null || borrower.getPhoneNumber().isBlank()) {
+            borrower.setPhoneNumber(resolvedPhone);
+            borrower.setPreferredContactMethod(method);
+            studentRepository.save(borrower);
+        }
+
         BorrowRequest request = new BorrowRequest();
         request.setItem(item);
         request.setBorrower(borrower);
         request.setStartDate(startDate);
         request.setEndDate(endDate);
+        request.setRequesterPhone(resolvedPhone);
+        request.setRequesterEmail(resolvedEmail);
+        request.setPreferredContactMethod(method);
 
         borrowRequestService.createRequest(request);
 
-        return "redirect:/my-borrow-requests";
+        return "redirect:/my-borrow-requests?requested";
     }
 
     // View requests sent by the logged-in student
@@ -194,5 +229,44 @@ public class BorrowRequestController {
         borrowRequestService.rejectRequest(requestId);
 
         return "redirect:/received-requests";
+    }
+
+    // View request details and coordinated contact information
+    @GetMapping("/borrow-requests/{requestId}")
+    public String viewRequestDetails(
+            @PathVariable Long requestId,
+            HttpSession session,
+            Model model) {
+
+        Long studentId = (Long) session.getAttribute("studentId");
+
+        if (studentId == null) {
+            return "redirect:/login";
+        }
+
+        BorrowRequest request = borrowRequestRepository.findById(requestId).orElse(null);
+
+        if (request == null) {
+            return "redirect:/dashboard?error=notfound";
+        }
+
+        boolean isBorrower = request.getBorrower().getId().equals(studentId);
+        boolean isOwner = request.getItem().getOwner().getId().equals(studentId);
+
+        // Strict security & privacy authorization check:
+        // Only the requester and the item owner can view this request
+        if (!isBorrower && !isOwner) {
+            return "redirect:/dashboard?error=unauthorized";
+        }
+
+        // Privacy rule: Contact details are only visible if the request is ACCEPTED/APPROVED
+        boolean canViewContact = "APPROVED".equals(request.getStatus());
+
+        model.addAttribute("request", request);
+        model.addAttribute("isBorrower", isBorrower);
+        model.addAttribute("isOwner", isOwner);
+        model.addAttribute("canViewContact", canViewContact);
+
+        return "borrow-request-details";
     }
 }

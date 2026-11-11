@@ -32,6 +32,12 @@ public class Student {
     @Size(min = 8, message = "Password must contain at least 8 characters")
     private String password;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "preferred_contact_method")
+    private String preferredContactMethod = "PHONE";
+
     public Student() {
     }
 
@@ -77,5 +83,21 @@ public class Student {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPreferredContactMethod() {
+        return preferredContactMethod != null ? preferredContactMethod : "PHONE";
+    }
+
+    public void setPreferredContactMethod(String preferredContactMethod) {
+        this.preferredContactMethod = preferredContactMethod;
     }
 }
